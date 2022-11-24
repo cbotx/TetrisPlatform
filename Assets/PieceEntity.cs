@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class PieceEntity : MonoBehaviour
 {
-
     public static float s_FallInterval = 1f;
     public static float s_RepeatInterval = 0.03f;
     public static float s_WaitBeforeRepeatInterval = 0.15f;
@@ -22,6 +21,7 @@ public class PieceEntity : MonoBehaviour
 
     private Playfield _playfield;
 
+    public int PieceId { get; set; }
     private void Awake()
     {
         _playfield = GetComponentInParent<Playfield>();
@@ -62,11 +62,11 @@ public class PieceEntity : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Z))
         {
-            Rotate(false);
+            Rotate(-1);
         }
         else if (Input.GetKeyDown(KeyCode.X))
         {
-            Rotate(true);
+            Rotate(1);
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
@@ -172,9 +172,9 @@ public class PieceEntity : MonoBehaviour
         }
         transform.position -= v;
     }
-    private void Rotate(bool isClockwise)
+    private void Rotate(int amount)
     {
-        int degree = isClockwise ? -90 : 90;
+        int degree = amount * 90;
         Vector3 v = new(0, 0, 1);
         transform.RotateAround(transform.TransformPoint(RotationPoint), v, degree);
         if (!IsValid()) transform.RotateAround(transform.TransformPoint(RotationPoint), v, -degree);

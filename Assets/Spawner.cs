@@ -23,9 +23,10 @@ public class Spawner : MonoBehaviour
     private void Start()
     {
         GenerateBag();
-        _pieceQueue.SetSwap(GetPieceEntityFromBag());
-        for (int i = 0; i < PieceQueue.QueueSize; ++i) _pieceQueue.PushPiece(GetPieceEntityFromBag());
-        PieceEntity pieceEntity = _pieceQueue.PushAndGetPiece(GetPieceEntityFromBag());
+        _pieceQueue.SetSwap(GetNextPieceEntity());
+        
+        for (int i = 0; i < PieceQueue.QueueSize; ++i) _pieceQueue.PushPiece(GetNextPieceEntity());
+        PieceEntity pieceEntity = _pieceQueue.PushAndGetPiece(GetNextPieceEntity());
         SpawnPieceOnField(pieceEntity);
     }
 
@@ -33,29 +34,22 @@ public class Spawner : MonoBehaviour
     {
         // Transfer piece to field
         pieceEntity.transform.position = transform.position;
-        pieceEntity.transform.localScale = new Vector3(1, 1, 1);
         pieceEntity.Initialize();
         _playfield.FieldPiece = pieceEntity;
 
         // Spawn ghost piece
-        PieceEntity ghostPiece = Instantiate(pieceEntity, transform.position, Quaternion.identity, _playfield.transform);
+        PieceEntity ghostPiece = PieceConstructor.ConstructPiece(pieceEntity.PieceId, _playfield.transform, true);
+        ghostPiece.transform.position = pieceEntity.transform.position;
         ghostPiece.enabled = false;
         _playfield.GhostedPiece = ghostPiece;
         ghostPiece.GhostDrop();
 
-        // Change ghost piece opacity
-        foreach (Transform child in ghostPiece.transform)
-        {
-            var renderer = child.gameObject.GetComponent<SpriteRenderer>();
-            var color = renderer.color;
-            color.a = GhostAlpha;
-            renderer.color = color;
-        }
+
     }
 
     public void NextPiece()
     {
-        PieceEntity pieceEntity = _pieceQueue.PushAndGetPiece(GetPieceEntityFromBag());
+        PieceEntity pieceEntity = _pieceQueue.PushAndGetPiece(GetNextPieceEntity());
         SpawnPieceOnField(pieceEntity);
     }
 
@@ -75,16 +69,19 @@ public class Spawner : MonoBehaviour
         _bag = Enumerable.Range(0, 7).OrderBy(c => rnd.Next()).ToArray();
     }
 
-    private PieceEntity GetPieceEntityFromBag()
+    private int GetNextPieceFromBag()
     {
-        PieceEntity pieceEntity = PieceEntities[_bag[_bagIdx]].GetComponent<PieceEntity>();
+        int pieceId = _bag[_bagIdx];
         ++_bagIdx;
         if (_bagIdx >= 7)
         {
             GenerateBag();
             _bagIdx = 0;
         }
-        return pieceEntity;
+        return pieceId;
+    }
 
+    private PieceEntity GetNextPieceEntity() {
+        return PieceConstructor.ConstructPiece(GetNextPieceFromBag(), _playfield.transform, false);
     }
 }

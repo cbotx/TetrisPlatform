@@ -14,8 +14,8 @@ public class PieceQueue : MonoBehaviour
     private void Awake()
     {
         _playfield = GetComponentInParent<Playfield>();
-        _swapGO = GameObject.Find("SwapQueue");
-        _nextQueueGO = GameObject.Find("NextQueue");
+        _swapGO = transform.Find("SwapQueue").gameObject;
+        _nextQueueGO = transform.Find("NextQueue").gameObject;
     }
 
     public PieceEntity PushAndGetPiece(PieceEntity pieceEntity)
@@ -34,28 +34,30 @@ public class PieceQueue : MonoBehaviour
         {
             obj.transform.position += new Vector3(0, 2, 0);
         }
-        PieceEntity newPieceEntity = Instantiate(pieceEntity, _playfield.transform);
 
-        newPieceEntity.transform.SetParent(_nextQueueGO.transform, false);
-        newPieceEntity.transform.position = _nextQueueGO.transform.position;
-        newPieceEntity.enabled = false;
-        _queue.Add(newPieceEntity);
+        // PieceEntity newPieceEntity = Instantiate(pieceEntity, _playfield.transform);
+
+        pieceEntity.transform.SetParent(_nextQueueGO.transform, false);
+        pieceEntity.transform.position = _nextQueueGO.transform.position;
+        pieceEntity.enabled = false;
+        _queue.Add(pieceEntity);
     }
 
     public void SetSwap(PieceEntity pieceEntity)
     {
-        PieceEntity newPieceEntity = Instantiate(pieceEntity, _playfield.transform);
+        // PieceEntity newPieceEntity = Instantiate(pieceEntity, _playfield.transform);
 
-        newPieceEntity.transform.SetParent(_swapGO.transform, false);
-        newPieceEntity.transform.position = _swapGO.transform.position;
-        newPieceEntity.enabled = false;
-        _swapPiece = newPieceEntity;
+        pieceEntity.transform.SetParent(_swapGO.transform, false);
+        pieceEntity.transform.position = _swapGO.transform.position;
+        pieceEntity.enabled = false;
+        _swapPiece = pieceEntity;
     }
 
     public PieceEntity Swap(PieceEntity pieceEntity)
     {
         pieceEntity.transform.SetParent(_swapGO.transform, false);
         pieceEntity.transform.position = _swapGO.transform.position;
+        pieceEntity.transform.rotation = Quaternion.identity;
         pieceEntity.enabled = false;
         PieceEntity oldPiece = _swapPiece;
         oldPiece.enabled = true;
