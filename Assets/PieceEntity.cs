@@ -45,7 +45,7 @@ public class PieceEntity : MonoBehaviour
     private int _pieceId;
     public int PieceId { 
         get => _pieceId;
-        set { _pieceId = value; _shape = _playfield.rule.shapeOfPiece[value]; }
+        set { _pieceId = value; _shape = _playfield.rule.shapesOfPiece[value][direction]; }
     }
     private void Awake()
     {
@@ -92,6 +92,10 @@ public class PieceEntity : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.D))
         {
             Rotate(1);
+        }
+        else if (Input.GetKeyDown(KeyCode.W))
+        {
+            Rotate(2);
         }
         else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
@@ -201,26 +205,30 @@ public class PieceEntity : MonoBehaviour
     private bool Rotate(int rotation)
     {
         int newDirection = (direction + rotation) % 4;
-        PieceShape[] attempts = _playfield.rule.kickTableOfPiece[PieceId][rotation, direction];
+        Vector2Int[] attempts = _playfield.rule.kickTableOfPiece[PieceId][rotation, direction];
 
+        PieceShape newShape = _playfield.rule.shapesOfPiece[PieceId][newDirection];
         int i = 0;
-        foreach (PieceShape attempt in attempts)
+        foreach (Vector2Int attempt in attempts)
         {
-            if(!_playfield.HitTest(transform.position, attempt))
+            if(!_playfield.HitTest(transform.position, newShape, attempt))
             {
-                Shape = attempt;
-                _playfield.GhostedPiece.Shape = attempt;
+                Shape = newShape;
+                _playfield.GhostedPiece.Shape = newShape;
+                transform.localPosition += new Vector3(attempt.x, attempt.y, 0f);
+
+                // Debug.Log($"rotation: {rotation} ({direction}->{newDirection}), attempt #{i} success: {attempt}");
+
                 direction = newDirection;
                 PostMovement();
 
-                Debug.Log($"rotation: {rotation}, attempt #{i} success");
                 return true;
             }
 
             i++;
         }
 
-        Debug.Log($"rotation: {rotation}, attempts {i} of {i} false");
+        //Debug.Log($"rotation: {rotation}, attempts {i} of {i} false");
         return false;
 
     }
@@ -249,7 +257,7 @@ public class PieceEntity : MonoBehaviour
 
     private bool IsValid()
     {
-        return !_playfield.HitTest(transform.position, _shape);
+        return !_playfield.HitTest(transform.position, _shape, Vector2Int.zero);
     }
 
     //private bool IsValid()

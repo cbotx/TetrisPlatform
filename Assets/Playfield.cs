@@ -5,7 +5,7 @@ using UnityEngine;
 public class Playfield : MonoBehaviour
 {
     public const int s_Width = 10;
-    public const int s_Height = 20;
+    public const int s_Height = 50;
     private Transform[,] s_Field = new Transform[s_Width, s_Height];
 
     public PieceEntity GhostedPiece { get; set; }
@@ -24,15 +24,15 @@ public class Playfield : MonoBehaviour
         return s_Field[x, y] != null;
     }
 
-    public bool HitTest(Vector3 position, PieceShape shape)
+    public bool HitTest(Vector3 position, PieceShape shape, Vector2Int offset)
     {
-        int cx = Mathf.RoundToInt(position.x);
-        int cy = Mathf.RoundToInt(position.y);
+        int cx = Mathf.RoundToInt(position.x) + offset.x;
+        int cy = Mathf.RoundToInt(position.y) + offset.y;
 
-        foreach (var offset in shape.blocks)
+        foreach (var pos in shape.blocks)
         {
-            int x = cx + offset.x;
-            int y = cy + offset.y;
+            int x = cx + pos.x;
+            int y = cy + pos.y;
             if (x < 0 || x >= Playfield.s_Width || y < 0 || y >= Playfield.s_Height) return true;
             if (HasEntityAt(x,y)) return true;
         }

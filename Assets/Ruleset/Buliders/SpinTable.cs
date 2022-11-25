@@ -41,6 +41,9 @@ public class SpinTable: IEnumerable<KickTests>
         set { kickTests[from_direction] = value; }
     }
 
+
+    public static SpinTable One = new(Enumerable.Repeat(new KickTests(0,0), 4));
+
     public SpinTable(IEnumerable<KickTests> kickTests)
     {
         this.kickTests = kickTests.ToArray();

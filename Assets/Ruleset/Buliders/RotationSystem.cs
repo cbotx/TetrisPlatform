@@ -31,18 +31,17 @@ public class RotationSystem
         spinTables[2] = spinTables180.ToArray();
         spinTables[3] = spinTables__L.ToArray();
     }
-
-    //public override string ToString()
-    //{
-    //    return $"R=\n{SpinTables_R}\n\nL={SpinTables_R}\nD180=\n{SpinTables_180}";
-    //}
+    public override string ToString()
+    {
+        return $"R=\n{SpinTables_R}\n\nL=\n{SpinTables_R}\n\nD180=\n{SpinTables_180}";
+    }
 
     // Z L O S I J T
-    public static RotationSystem Tetris(SpinTable R, SpinTable L, SpinTable IR, SpinTable IL, SpinTable _180){
+    public static RotationSystem Tetris(SpinTable R, SpinTable L, SpinTable IR, SpinTable IL, SpinTable D){
         return new(
-            new SpinTable[] { R, R, R, R, IR, R, R },
-            new SpinTable[] { L, L, L, L, IL, L, L },
-            Enumerable.Repeat(_180, 7)
+            new SpinTable[] { R, R, SpinTable.One, R, IR, R, R },
+            new SpinTable[] { L, L, SpinTable.One, L, IL, L, L },
+            new SpinTable[] { D, D, SpinTable.One, D,  D, D, D }
         );
     }
 
