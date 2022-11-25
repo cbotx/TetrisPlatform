@@ -9,6 +9,25 @@ public class PieceEntity : MonoBehaviour
 
     public Vector3 RotationPoint;
 
+    private PieceShape _shape;
+    public PieceShape Shape
+    {
+        get => _shape;
+        set {
+            _shape = value;
+            Vector3[] localPositions = _shape.ToVector3Array();
+            int i = 0;
+            foreach (Transform child in transform)
+            {
+                child.localPosition = localPositions[i];
+                i++;
+            }
+        }
+    }
+
+    // 0=Up, 1=Right, 2=Down, 3=Left
+    public int direction;
+
     public PieceType PieceType;
 
     private float _prevUpdateTime;
@@ -23,7 +42,11 @@ public class PieceEntity : MonoBehaviour
 
     private Playfield _playfield;
 
-    public int PieceId { get; set; }
+    private int _pieceId;
+    public int PieceId { 
+        get => _pieceId;
+        set { _pieceId = value; _shape = _playfield.rule.shapeOfPiece[value]; }
+    }
     private void Awake()
     {
         _playfield = GetComponentInParent<Playfield>();
@@ -64,11 +87,11 @@ public class PieceEntity : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {
-            Rotate(1);
+            Rotate(3);
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            Rotate(3);
+            Rotate(1);
         }
         else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
@@ -148,7 +171,7 @@ public class PieceEntity : MonoBehaviour
         // Update ghosted piece position
         PieceEntity GhostedPiece = _playfield.GhostedPiece;
         GhostedPiece.transform.position = transform.position;
-        GhostedPiece.transform.rotation = transform.rotation;
+        //GhostedPiece.transform.rotation = transform.rotation;
         GhostedPiece.GhostDrop();
     }
 
@@ -175,35 +198,70 @@ public class PieceEntity : MonoBehaviour
         transform.position -= v;
     }
 
-    private void Rotate(int amount)
+    private bool Rotate(int rotation)
     {
-        foreach (Transform child in transform)
+        int newDirection = (direction + rotation) % 4;
+        PieceShape[] attempts = _playfield.rule.kickTableOfPiece[PieceId][rotation, direction];
+
+        int i = 0;
+        foreach (PieceShape attempt in attempts)
         {
-            child.GetComponent<BlockRotation>().Rotate(amount);
+            if(!_playfield.HitTest(transform.position, attempt))
+            {
+                Shape = attempt;
+                _playfield.GhostedPiece.Shape = attempt;
+                direction = newDirection;
+                PostMovement();
+
+                Debug.Log($"rotation: {rotation}, attempt #{i} success");
+                return true;
+            }
+
+            i++;
         }
+
+        Debug.Log($"rotation: {rotation}, attempts {i} of {i} false");
+        return false;
+
     }
 
-    private void TryRotate(int amount)
-    {
-        int degree = amount * 90;
-        Vector3 v = new(0, 0, 1);
 
-        Rotate(amount);
-        //transform.RotateAround(transform.TransformPoint(RotationPoint), v, degree);
-        if (!IsValid()) Rotate(4-amount); // transform.RotateAround(transform.TransformPoint(RotationPoint), v, -degree);
-        PostMovement();
-    }
+    //private void Rotate(int rotation)
+    //{
+
+
+    //    //foreach (Transform child in transform)
+    //    //{
+    //    //    child.GetComponent<BlockRotation>().Rotate(amount);
+    //    //}
+    //}
+
+    //private void TryRotate(int amount)
+    //{
+    //    int degree = amount * 90;
+    //    Vector3 v = new(0, 0, 1);
+
+    //    Rotate(amount);
+    //    //transform.RotateAround(transform.TransformPoint(RotationPoint), v, degree);
+    //    if (!IsValid()) Rotate(4-amount); // transform.RotateAround(transform.TransformPoint(RotationPoint), v, -degree);
+    //    PostMovement();
+    //}
 
     private bool IsValid()
     {
-        foreach (Transform child in transform)
-        {
-            int x = Mathf.RoundToInt(child.transform.position.x);
-            int y = Mathf.RoundToInt(child.transform.position.y);
-            if (x < 0 || x >= Playfield.s_Width || y < 0 || y >= Playfield.s_Height) return false;
-            if (_playfield.HasEntityAt(x, y)) return false;
-        }
-        return true;
+        return !_playfield.HitTest(transform.position, _shape);
     }
+
+    //private bool IsValid()
+    //{
+    //    foreach (Transform child in transform)
+    //    {
+    //        int x = Mathf.RoundToInt(child.transform.position.x);
+    //        int y = Mathf.RoundToInt(child.transform.position.y);
+    //        if (x < 0 || x >= Playfield.s_Width || y < 0 || y >= Playfield.s_Height) return false;
+    //        if (_playfield.HasEntityAt(x, y)) return false;
+    //    }
+    //    return true;
+    //}
 
 }

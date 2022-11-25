@@ -13,7 +13,7 @@ public class Playfield : MonoBehaviour
 
     private Spawner _spawner = null;
 
-    public TetrisPieces pieces = GameDefinitions.defaultTetrisPieces;
+    public TetrisRule rule = GameDefinitions.Tetris_SRS_Plus;
 
     private void Awake()
     {
@@ -22,6 +22,22 @@ public class Playfield : MonoBehaviour
     public bool HasEntityAt(int x, int y)
     {
         return s_Field[x, y] != null;
+    }
+
+    public bool HitTest(Vector3 position, PieceShape shape)
+    {
+        int cx = Mathf.RoundToInt(position.x);
+        int cy = Mathf.RoundToInt(position.y);
+
+        foreach (var offset in shape.blocks)
+        {
+            int x = cx + offset.x;
+            int y = cy + offset.y;
+            if (x < 0 || x >= Playfield.s_Width || y < 0 || y >= Playfield.s_Height) return true;
+            if (HasEntityAt(x,y)) return true;
+        }
+
+        return false;
     }
 
     public void FreezePiece()

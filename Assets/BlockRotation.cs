@@ -25,7 +25,7 @@ public class BlockRotation: MonoBehaviour
     public void Rotate(int f)
     {
         rotation = (rotation + f) % 4;
-        transform.localPosition = pieceType.shape[rotation].blocks[index];
+        //transform.localPosition = pieceType.shapes[rotation].blocks[index];
     }
 
 

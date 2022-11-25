@@ -34,5 +34,8 @@ public static class ExtensionUtils
     {
         return coords.TakeEvery(2).Select(e => new Vector3(e[0], e[1], 0f));
     }
-
+    public static IEnumerable<Vector2Int> ToCollection_Of_Vector2Int(this int[] coords)
+    {
+        return coords.TakeEvery(2).Select(e => new Vector2Int(e[0], e[1]));
+    }
 }

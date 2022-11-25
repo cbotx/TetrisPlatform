@@ -28,7 +28,7 @@ public class PieceConstructor : MonoBehaviour
     private readonly static string[] nameTable = { "Z", "L", "O", "S", "I", "J", "T" };
     public static PieceEntity ConstructPiece(int pieceId, Transform parent, bool isGhost)
     {
-        TetrisPieces pieces = parent.GetComponent<Playfield>().pieces;
+        TetrisRule pieces = parent.GetComponent<Playfield>().rule;
         PieceType pieceType = pieces[pieceId];
 
         GameObject pieceGameObject = new();
@@ -38,8 +38,8 @@ public class PieceConstructor : MonoBehaviour
             GameObject tileObject = new();
             tileObject.name = i.ToString();
             tileObject.AddComponent<SpriteRenderer>();
-            tileObject.AddComponent<BlockRotation>()
-                .Set(pieceType, i);
+            //tileObject.AddComponent<BlockRotation>()
+            //    .Set(pieceType, i);
 
             SpriteRenderer renderer = tileObject.GetComponent<SpriteRenderer>();
             renderer.sprite = SkinLoader.s_simpleSprites[isGhost ? 7 : pieceId];
