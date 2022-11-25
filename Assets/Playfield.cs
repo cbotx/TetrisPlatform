@@ -11,13 +11,13 @@ public class Playfield : MonoBehaviour
     public PieceEntity GhostedPiece { get; set; }
     public PieceEntity FieldPiece { get; set; }
 
-    private Spawner _spawner = null;
+    public Spawner spawner = null;
 
     public TetrisRule rule = GameDefinitions.Tetris_SRS_Plus;
 
     private void Awake()
     {
-        _spawner = GetComponentInChildren<Spawner>();
+        spawner = GetComponentInChildren<Spawner>();
     }
     public bool HasEntityAt(int x, int y)
     {
@@ -60,7 +60,7 @@ public class Playfield : MonoBehaviour
         ClearLines();
 
         // Spawn new piece
-        _spawner.NextPiece();
+        spawner.NextPiece();
     }
     private void ClearLines()
     {

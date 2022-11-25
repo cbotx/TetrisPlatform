@@ -8,7 +8,6 @@ public class PieceEntity : MonoBehaviour
     public static float s_TimeTillFreeze = 1.5f;
 
     public Vector3 RotationPoint;
-
     private PieceShape _shape;
     public PieceShape Shape
     {
@@ -27,7 +26,6 @@ public class PieceEntity : MonoBehaviour
 
     // 0=Up, 1=Right, 2=Down, 3=Left
     public int direction;
-
     public PieceType PieceType;
 
     private float _prevUpdateTime;
@@ -45,7 +43,10 @@ public class PieceEntity : MonoBehaviour
     private int _pieceId;
     public int PieceId { 
         get => _pieceId;
-        set { _pieceId = value; _shape = _playfield.rule.shapesOfPiece[value][direction]; }
+        set { 
+            _pieceId = value; 
+            _shape = _playfield.rule.shapesOfPiece[value][direction]; 
+        }
     }
     private void Awake()
     {
@@ -65,11 +66,11 @@ public class PieceEntity : MonoBehaviour
         {
             HardDrop();
         }
-        else if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            FindObjectOfType<Spawner>().Swap();
+            _playfield.spawner.Swap();
         }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             _moveLeft = true;
             _moveRight = false;
@@ -77,7 +78,7 @@ public class PieceEntity : MonoBehaviour
             Move(-1, 0);
             _prevUpdateTime = Time.time;
         }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             _moveLeft = false;
             _moveRight = true;
@@ -85,19 +86,19 @@ public class PieceEntity : MonoBehaviour
             Move(1, 0);
             _prevUpdateTime = Time.time;
         }
-        else if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.A))
         {
             Rotate(3);
         }
-        else if (Input.GetKeyDown(KeyCode.D))
+        if (Input.GetKeyDown(KeyCode.D))
         {
             Rotate(1);
         }
-        else if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.W))
         {
             Rotate(2);
         }
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             Move(0, -1);
             _prevFallTime = Time.time;
@@ -153,14 +154,14 @@ public class PieceEntity : MonoBehaviour
         transform.position -= v;
     }
 
-    private void HardDrop()
+    public void HardDrop()
     {
         Vector3 v = new(0, -1, 0);
         while (IsValid()) transform.position += v;
         transform.position -= v;
         _playfield.FreezePiece();
     }
-    private void Move(int x, int y)
+    public void Move(int x, int y)
     {
         Vector3 v = new(x, y, 0);
         transform.position += v;
@@ -168,18 +169,17 @@ public class PieceEntity : MonoBehaviour
         PostMovement();
     }
 
-    private void PostMovement()
+    public void PostMovement()
     {
         BottomTest();
 
         // Update ghosted piece position
         PieceEntity GhostedPiece = _playfield.GhostedPiece;
         GhostedPiece.transform.position = transform.position;
-        //GhostedPiece.transform.rotation = transform.rotation;
         GhostedPiece.GhostDrop();
     }
 
-    private void BottomTest()
+    public void BottomTest()
     {
         Vector3 v = new(0, -1, 0);
         transform.position += v;
@@ -202,7 +202,7 @@ public class PieceEntity : MonoBehaviour
         transform.position -= v;
     }
 
-    private bool Rotate(int rotation)
+    public bool Rotate(int rotation)
     {
         int newDirection = (direction + rotation) % 4;
         Vector2Int[] attempts = _playfield.rule.kickTableOfPiece[PieceId][rotation, direction];
@@ -227,49 +227,23 @@ public class PieceEntity : MonoBehaviour
 
             i++;
         }
-
-        //Debug.Log($"rotation: {rotation}, attempts {i} of {i} false");
         return false;
 
     }
 
 
-    //private void Rotate(int rotation)
-    //{
+    public void ResetShape()
+    {
+        direction = 0;
+        PieceId = _pieceId;
+        Shape = _shape;
+    }
 
-
-    //    //foreach (Transform child in transform)
-    //    //{
-    //    //    child.GetComponent<BlockRotation>().Rotate(amount);
-    //    //}
-    //}
-
-    //private void TryRotate(int amount)
-    //{
-    //    int degree = amount * 90;
-    //    Vector3 v = new(0, 0, 1);
-
-    //    Rotate(amount);
-    //    //transform.RotateAround(transform.TransformPoint(RotationPoint), v, degree);
-    //    if (!IsValid()) Rotate(4-amount); // transform.RotateAround(transform.TransformPoint(RotationPoint), v, -degree);
-    //    PostMovement();
-    //}
 
     private bool IsValid()
     {
         return !_playfield.HitTest(transform.position, _shape, Vector2Int.zero);
     }
 
-    //private bool IsValid()
-    //{
-    //    foreach (Transform child in transform)
-    //    {
-    //        int x = Mathf.RoundToInt(child.transform.position.x);
-    //        int y = Mathf.RoundToInt(child.transform.position.y);
-    //        if (x < 0 || x >= Playfield.s_Width || y < 0 || y >= Playfield.s_Height) return false;
-    //        if (_playfield.HasEntityAt(x, y)) return false;
-    //    }
-    //    return true;
-    //}
 
 }

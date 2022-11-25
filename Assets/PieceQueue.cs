@@ -55,6 +55,8 @@ public class PieceQueue : MonoBehaviour
 
     public PieceEntity Swap(PieceEntity pieceEntity)
     {
+        pieceEntity.ResetShape();
+
         pieceEntity.transform.SetParent(_swapGO.transform, false);
         pieceEntity.transform.position = _swapGO.transform.position;
         pieceEntity.transform.rotation = Quaternion.identity;
