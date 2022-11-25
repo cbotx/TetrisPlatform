@@ -13,6 +13,8 @@ public class Playfield : MonoBehaviour
 
     private Spawner _spawner = null;
 
+    public TetrisPieces pieces = GameDefinitions.defaultTetrisPieces;
+
     private void Awake()
     {
         _spawner = GetComponentInChildren<Spawner>();

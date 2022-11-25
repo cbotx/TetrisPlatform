@@ -9,6 +9,8 @@ public class PieceEntity : MonoBehaviour
 
     public Vector3 RotationPoint;
 
+    public PieceType PieceType;
+
     private float _prevUpdateTime;
     private float _prevFallTime;
     private float _freezeTime;
@@ -40,7 +42,7 @@ public class PieceEntity : MonoBehaviour
         {
             HardDrop();
         }
-        else if (Input.GetKeyDown(KeyCode.C))
+        else if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             FindObjectOfType<Spawner>().Swap();
         }
@@ -60,15 +62,15 @@ public class PieceEntity : MonoBehaviour
             Move(1, 0);
             _prevUpdateTime = Time.time;
         }
-        else if (Input.GetKeyDown(KeyCode.Z))
-        {
-            Rotate(-1);
-        }
-        else if (Input.GetKeyDown(KeyCode.X))
+        else if (Input.GetKeyDown(KeyCode.A))
         {
             Rotate(1);
         }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        else if (Input.GetKeyDown(KeyCode.D))
+        {
+            Rotate(3);
+        }
+        else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             Move(0, -1);
             _prevFallTime = Time.time;
@@ -98,7 +100,7 @@ public class PieceEntity : MonoBehaviour
         {
             _repeat = false;
         }
-        float interval = Input.GetKey(KeyCode.DownArrow) ? s_RepeatInterval : s_FallInterval;
+        float interval = Input.GetKey(KeyCode.UpArrow) ? s_RepeatInterval : s_FallInterval;
         if (Time.time - _prevFallTime >= interval)
         {
             Move(0, -1);
@@ -172,12 +174,23 @@ public class PieceEntity : MonoBehaviour
         }
         transform.position -= v;
     }
+
     private void Rotate(int amount)
+    {
+        foreach (Transform child in transform)
+        {
+            child.GetComponent<BlockRotation>().Rotate(amount);
+        }
+    }
+
+    private void TryRotate(int amount)
     {
         int degree = amount * 90;
         Vector3 v = new(0, 0, 1);
-        transform.RotateAround(transform.TransformPoint(RotationPoint), v, degree);
-        if (!IsValid()) transform.RotateAround(transform.TransformPoint(RotationPoint), v, -degree);
+
+        Rotate(amount);
+        //transform.RotateAround(transform.TransformPoint(RotationPoint), v, degree);
+        if (!IsValid()) Rotate(4-amount); // transform.RotateAround(transform.TransformPoint(RotationPoint), v, -degree);
         PostMovement();
     }
 

@@ -28,6 +28,9 @@ public class PieceConstructor : MonoBehaviour
     private readonly static string[] nameTable = { "Z", "L", "O", "S", "I", "J", "T" };
     public static PieceEntity ConstructPiece(int pieceId, Transform parent, bool isGhost)
     {
+        TetrisPieces pieces = parent.GetComponent<Playfield>().pieces;
+        PieceType pieceType = pieces[pieceId];
+
         GameObject pieceGameObject = new();
         pieceGameObject.name = (isGhost ? "Ghost" : "") + nameTable[pieceId];
         for (int i = 0; i < 4; ++i)
@@ -35,6 +38,9 @@ public class PieceConstructor : MonoBehaviour
             GameObject tileObject = new();
             tileObject.name = i.ToString();
             tileObject.AddComponent<SpriteRenderer>();
+            tileObject.AddComponent<BlockRotation>()
+                .Set(pieceType, i);
+
             SpriteRenderer renderer = tileObject.GetComponent<SpriteRenderer>();
             renderer.sprite = SkinLoader.s_simpleSprites[isGhost ? 7 : pieceId];
             renderer.sortingOrder = isGhost ? 0 : 1;
@@ -45,6 +51,7 @@ public class PieceConstructor : MonoBehaviour
         pieceGameObject.transform.SetParent(parent);
         pieceGameObject.AddComponent<PieceEntity>();
         PieceEntity pieceEntity = pieceGameObject.GetComponent<PieceEntity>();
+        pieceEntity.PieceType = pieceType;
         pieceEntity.RotationPoint = pieceRotationPointTable[pieceId];
         pieceEntity.PieceId = pieceId;
         return pieceEntity;
