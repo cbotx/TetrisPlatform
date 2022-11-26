@@ -70,7 +70,7 @@ public static class SkinLoader
     {
         int x = (s_connectedTexturePosition[pieceId, 0] + tileIdx % 4) * unitSize;
         int y = texture.height - (s_connectedTexturePosition[pieceId, 1] + tileIdx / 4) * unitSize - unitSize;
-        return Sprite.Create(texture, new Rect(new Vector2(x, y), new Vector2(unitSize, unitSize)), new Vector2(0.5f, 0.5f), unitSize);
+        return Sprite.Create(texture, new Rect(new Vector2(x + 1, y + 1), new Vector2(unitSize - 2, unitSize - 2)), new Vector2(0.5f, 0.5f), unitSize - 2);
     }
 
 }
