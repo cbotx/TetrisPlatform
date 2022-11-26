@@ -13,6 +13,7 @@ public class Spawner : MonoBehaviour
 
     private Playfield _playfield = null;
     private PieceQueue _pieceQueue = null;
+
     private void Awake()
     {
         _playfield = GetComponentInParent<Playfield>();
@@ -28,6 +29,13 @@ public class Spawner : MonoBehaviour
         for (int i = 0; i < PieceQueue.QueueSize; ++i) _pieceQueue.PushPiece(GetNextPieceEntity());
         PieceEntity pieceEntity = _pieceQueue.PushAndGetPiece(GetNextPieceEntity());
         SpawnPieceOnField(pieceEntity);
+    }
+
+    public void Restart()
+    {
+        _pieceQueue.Restart();
+
+        Start();
     }
 
     private void SpawnPieceOnField(PieceEntity pieceEntity)

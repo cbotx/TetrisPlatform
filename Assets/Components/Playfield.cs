@@ -52,6 +52,14 @@ public class Playfield : MonoBehaviour
         return false;
     }
 
+    public void Restart()
+    {
+        s_Field = new bool[s_Width, s_Height];
+        _tilemapBack.Clear();
+        spawner.Restart();
+        
+    }
+
     public void FreezePiece()
     {
         // Set field

@@ -7,15 +7,18 @@ public class PieceQueue : MonoBehaviour
     public const int QueueSize = 5;
     private List<PieceEntity> _queue = new();
     private PieceEntity _swapPiece = null;
+
+    [SerializeField]
     private GameObject _swapGO;
+    [SerializeField]
     private GameObject _nextQueueGO;
 
     private Playfield _playfield = null;
     private void Awake()
     {
         _playfield = GetComponentInParent<Playfield>();
-        _swapGO = transform.Find("SwapQueue").gameObject;
-        _nextQueueGO = transform.Find("NextQueue").gameObject;
+        //_swapGO = transform.Find("SwapQueue").gameObject;
+        //_nextQueueGO = transform.Find("NextQueue").gameObject;
     }
 
     public PieceEntity PushAndGetPiece(PieceEntity pieceEntity)
@@ -26,6 +29,13 @@ public class PieceQueue : MonoBehaviour
         firstPieceEntity.transform.SetParent(_playfield.transform, false);
         firstPieceEntity.enabled = true;
         return firstPieceEntity;
+    }
+
+
+    public void Restart()
+    {
+        _swapGO.transform.DestroyAllChildren();
+        _nextQueueGO.transform.DestroyAllChildren();
     }
 
     public void PushPiece(PieceEntity pieceEntity)

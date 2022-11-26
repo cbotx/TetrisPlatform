@@ -55,6 +55,11 @@ public class TilemapField : MonoBehaviour
         }
     }
 
+    public void Clear()
+    {
+        _tilemap.ClearAllTiles();
+    }
+
     public void SetTile(Vector3Int position, TileBase tile)
     {
         _tilemap.SetTile(position, tile);

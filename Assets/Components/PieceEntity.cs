@@ -68,6 +68,11 @@ public class PieceEntity : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.BackQuote))
+        {
+            _playfield.Restart();
+            return;
+        }
         if (Input.GetKeyDown(KeyCode.Space))
         {
             HardDrop();

@@ -30,6 +30,15 @@ public static class ExtensionUtils
     }
 
 
+
+    public static void DestroyAllChildren(this Transform parent)
+    {
+        for (int i = 0; i < parent.childCount; i++)
+        {
+            UnityEngine.Object.Destroy(parent.GetChild(i).gameObject);
+        }
+    }
+
     public static IEnumerable<Vector3> ToCollection_Of_Vector3(this int[] coords)
     {
         return coords.TakeEvery(2).Select(e => new Vector3(e[0], e[1], 0f));
