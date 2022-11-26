@@ -155,6 +155,7 @@ public class PieceEntity : MonoBehaviour
 
     public void Initialize()
     {
+        _isBottomTouched = false;
         _prevUpdateTime = Time.time;
         _prevFallTime = Time.time;
     }
