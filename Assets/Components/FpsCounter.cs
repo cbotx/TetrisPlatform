@@ -34,4 +34,6 @@ public class FpsCounter : MonoBehaviour
             _fpsText.text = $"fps: {fps:F0}";
         }
     }
+
+
 }
