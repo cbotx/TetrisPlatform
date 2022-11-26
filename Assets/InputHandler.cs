@@ -14,6 +14,8 @@ public class InputHandler: MonoBehaviour
     public static float s_TimeTillFreeze = 1.5f;
 
 
+    public KeyConfigs keys;
+
     private float _prevUpdateTime;
     private float _prevFallTime;
     private float _freezeTime;
