@@ -38,7 +38,7 @@ public class Spawner : MonoBehaviour
         _playfield.FieldPiece = pieceEntity;
 
         // Spawn ghost piece
-        PieceEntity ghostPiece = PieceConstructor.ConstructPiece(pieceEntity.PieceId, _playfield.transform, true);
+        PieceEntity ghostPiece = PieceConstructor.ConstructPiece(pieceEntity.PieceId, _playfield.transform, true, _playfield.skin);
         ghostPiece.transform.position = pieceEntity.transform.position;
         ghostPiece.enabled = false;
         _playfield.GhostedPiece = ghostPiece;
@@ -82,6 +82,6 @@ public class Spawner : MonoBehaviour
     }
 
     private PieceEntity GetNextPieceEntity() {
-        return PieceConstructor.ConstructPiece(GetNextPieceFromBag(), _playfield.transform, false);
+        return PieceConstructor.ConstructPiece(GetNextPieceFromBag(), _playfield.transform, false, _playfield.skin);
     }
 }

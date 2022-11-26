@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class PieceConstructor : MonoBehaviour
+using UnityEngine.Tilemaps;
+using Assets.Skins;
+public static class PieceConstructor
 {
     private readonly static int[,,] pieceTable =
     {
@@ -26,13 +27,15 @@ public class PieceConstructor : MonoBehaviour
         new Vector3(0, 0, 0),
     };
     private readonly static string[] nameTable = { "Z", "L", "O", "S", "I", "J", "T" };
-    public static PieceEntity ConstructPiece(int pieceId, Transform parent, bool isGhost)
+    public static PieceEntity ConstructPiece(int pieceId, Transform parent, bool isGhost, SkinBase skin)
     {
         TetrisRule pieces = parent.GetComponent<Playfield>().rule;
         PieceType pieceType = pieces[pieceId];
 
         GameObject pieceGameObject = new();
         pieceGameObject.name = (isGhost ? "Ghost" : "") + nameTable[pieceId];
+
+        List<Tile> tiles = skin.GetPieceTiles(GameDefinitions.Tetrominos[pieceId].BaseShape, isGhost ? 7 : pieceId);
         for (int i = 0; i < 4; ++i)
         {
             GameObject tileObject = new();
@@ -42,7 +45,7 @@ public class PieceConstructor : MonoBehaviour
             //    .Set(pieceType, i);
 
             SpriteRenderer renderer = tileObject.GetComponent<SpriteRenderer>();
-            renderer.sprite = SkinLoader.s_simpleSprites[isGhost ? 7 : pieceId];
+            renderer.sprite = tiles[i].sprite;
             renderer.sortingOrder = isGhost ? 0 : 1;
 
             tileObject.transform.SetParent(pieceGameObject.transform);
@@ -54,6 +57,7 @@ public class PieceConstructor : MonoBehaviour
         pieceEntity.PieceType = pieceType;
         pieceEntity.RotationPoint = pieceRotationPointTable[pieceId];
         pieceEntity.PieceId = pieceId;
+        pieceEntity.IsGhost = isGhost;
         return pieceEntity;
     }
 }

@@ -1,4 +1,7 @@
+using Assets.Skins;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class PieceEntity : MonoBehaviour
 {
@@ -37,6 +40,8 @@ public class PieceEntity : MonoBehaviour
     private bool _moveRight = false;
     private bool _repeat = false;
     private bool _isBottomTouched = false;
+
+    public bool IsGhost = false;
 
     private Playfield _playfield;
 
@@ -221,6 +226,11 @@ public class PieceEntity : MonoBehaviour
                 // Debug.Log($"rotation: {rotation} ({direction}->{newDirection}), attempt #{i} success: {attempt}");
 
                 direction = newDirection;
+
+                // For connected texture
+                UpdatePieceTexture(_playfield.skin);
+                _playfield.GhostedPiece.UpdatePieceTexture(_playfield.skin);
+
                 PostMovement();
 
                 return true;
@@ -230,6 +240,22 @@ public class PieceEntity : MonoBehaviour
         }
         return false;
 
+    }
+
+    private void UpdatePieceTexture(SkinBase skin)
+    {
+        List<Vector2Int> shape = new();
+        foreach (Transform child in transform)
+        {
+            int x = Mathf.RoundToInt(child.transform.position.x);
+            int y = Mathf.RoundToInt(child.transform.position.y);
+            shape.Add(new Vector2Int(x, y));
+        }
+        List<Tile> tiles = skin.GetPieceTiles(new PieceShape(shape), IsGhost ? 7 : PieceId);
+        for (int i = 0; i < transform.childCount; ++i)
+        {
+            transform.GetChild(i).GetComponent<SpriteRenderer>().sprite = tiles[i].sprite;
+        }
     }
 
 
