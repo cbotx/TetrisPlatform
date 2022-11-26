@@ -37,18 +37,20 @@ public class TilemapField : MonoBehaviour
         for (int j = 0; j < _width; ++j)
         {
             _tilemap.SetTile(new Vector3Int(j, lineIdx), null);
-
-            if (lineIdx > 0)
+            if (_skin.SkinType == SkinType.Connected)
             {
-                Vector3Int position = new(j, lineIdx - 1);
-                TileBase tile = _tilemap.GetTile(position);
-                if (tile) _tilemap.SetTile(position, _skin.GetTileCutTop(tile));
-            }
-            if (lineIdx < _height - 1)
-            {
-                Vector3Int position = new(j, lineIdx + 1);
-                TileBase tile = _tilemap.GetTile(position);
-                if (tile) _tilemap.SetTile(position, _skin.GetTileCutBottom(tile));
+                if (lineIdx > 0)
+                {
+                    Vector3Int position = new(j, lineIdx - 1);
+                    TileBase tile = _tilemap.GetTile(position);
+                    if (tile) _tilemap.SetTile(position, _skin.GetTileCutTop(tile));
+                }
+                if (lineIdx < _height - 1)
+                {
+                    Vector3Int position = new(j, lineIdx + 1);
+                    TileBase tile = _tilemap.GetTile(position);
+                    if (tile) _tilemap.SetTile(position, _skin.GetTileCutBottom(tile));
+                }
             }
         }
     }

@@ -2,6 +2,7 @@ using Assets.Skins;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Assets.Definitions;
 
 public class PieceEntity : MonoBehaviour
 {
@@ -242,8 +243,9 @@ public class PieceEntity : MonoBehaviour
 
     }
 
-    private void UpdatePieceTexture(SkinBase skin)
+    public void UpdatePieceTexture(SkinBase skin)
     {
+        if (skin.SkinType != SkinType.Connected) return;
         List<Vector2Int> shape = new();
         foreach (Transform child in transform)
         {
