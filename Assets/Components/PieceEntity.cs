@@ -79,7 +79,7 @@ public class PieceEntity : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            _playfield.spawner.Swap();
+            _playfield.Swap();
             return;
         }
         if (Input.GetKeyDown(KeyCode.LeftArrow))

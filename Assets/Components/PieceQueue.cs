@@ -17,8 +17,6 @@ public class PieceQueue : MonoBehaviour
     private void Awake()
     {
         _playfield = GetComponentInParent<Playfield>();
-        //_swapGO = transform.Find("SwapQueue").gameObject;
-        //_nextQueueGO = transform.Find("NextQueue").gameObject;
     }
 
     public PieceEntity PushAndGetPiece(PieceEntity pieceEntity)
@@ -32,10 +30,12 @@ public class PieceQueue : MonoBehaviour
     }
 
 
-    public void Restart()
+    public void Clear()
     {
         _swapGO.transform.DestroyAllChildren();
         _nextQueueGO.transform.DestroyAllChildren();
+        _queue.Clear();
+        _swapPiece = null;
     }
 
     public void PushPiece(PieceEntity pieceEntity)
@@ -45,8 +45,6 @@ public class PieceQueue : MonoBehaviour
             obj.transform.position += new Vector3(0, 2, 0);
         }
 
-        // PieceEntity newPieceEntity = Instantiate(pieceEntity, _playfield.transform);
-
         pieceEntity.transform.SetParent(_nextQueueGO.transform, false);
         pieceEntity.transform.position = _nextQueueGO.transform.position;
         pieceEntity.enabled = false;
@@ -55,8 +53,6 @@ public class PieceQueue : MonoBehaviour
 
     public void SetSwap(PieceEntity pieceEntity)
     {
-        // PieceEntity newPieceEntity = Instantiate(pieceEntity, _playfield.transform);
-
         pieceEntity.transform.SetParent(_swapGO.transform, false);
         pieceEntity.transform.position = _swapGO.transform.position;
         pieceEntity.enabled = false;

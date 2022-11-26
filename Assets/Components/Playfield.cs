@@ -16,7 +16,7 @@ public class Playfield : MonoBehaviour
 
     public SkinBase skin { get; set; }
 
-    private TilemapField _tilemapBack = null;
+    private TilemapField _tilemapField = null;
 
     public TetrisRule rule = GameDefinitions.Tetris_SRS_Plus;
 
@@ -28,8 +28,8 @@ public class Playfield : MonoBehaviour
     {
         spawner = GetComponentInChildren<Spawner>();
         skin = SkinLoader.LoadSkin(SkinFileName);
-        _tilemapBack = GetComponentInChildren<TilemapField>();
-        _tilemapBack.SetSkin(skin);
+        _tilemapField = GetComponentInChildren<TilemapField>();
+        _tilemapField.SetSkin(skin);
     }
     public bool HasEntityAt(int x, int y)
     {
@@ -55,9 +55,16 @@ public class Playfield : MonoBehaviour
     public void Restart()
     {
         s_Field = new bool[s_Width, s_Height];
-        _tilemapBack.Clear();
+        _tilemapField.Clear();
+        Destroy(FieldPiece.gameObject);
+        Destroy(GhostedPiece.gameObject);
         spawner.Restart();
-        
+    }
+
+    public void Swap()
+    {
+        Destroy(GhostedPiece.gameObject);
+        spawner.Swap();
     }
 
     public void FreezePiece()
@@ -71,7 +78,7 @@ public class Playfield : MonoBehaviour
             s_Field[x, y] = true;
             shape.Add(new Vector2Int(x, y));
         }
-        _tilemapBack.AddPieceTiles(new PieceShape(shape), FieldPiece.PieceId);
+        _tilemapField.AddPieceTiles(new PieceShape(shape), FieldPiece.PieceId);
          
         Destroy(FieldPiece.gameObject);
         Destroy(GhostedPiece.gameObject);
@@ -122,7 +129,7 @@ public class Playfield : MonoBehaviour
         {
             s_Field[j, lineIdx] = false;
         }
-        _tilemapBack.DeleteLine(lineIdx);
+        _tilemapField.DeleteLine(lineIdx);
     }
 
     private void MoveLineEntities(int lineIdx, int offset)
@@ -131,8 +138,8 @@ public class Playfield : MonoBehaviour
         {
             if (s_Field[j, lineIdx])
             {
-                _tilemapBack.SetTile(new Vector3Int(j, lineIdx - offset, 0), _tilemapBack.GetTile(new Vector3Int(j, lineIdx)));
-                _tilemapBack.SetTile(new Vector3Int(j, lineIdx), null);
+                _tilemapField.SetTile(new Vector3Int(j, lineIdx - offset, 0), _tilemapField.GetTile(new Vector3Int(j, lineIdx)));
+                _tilemapField.SetTile(new Vector3Int(j, lineIdx), null);
 
                 s_Field[j, lineIdx - offset] = true;
                 s_Field[j, lineIdx] = false;

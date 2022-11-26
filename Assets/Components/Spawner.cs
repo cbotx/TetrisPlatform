@@ -33,8 +33,7 @@ public class Spawner : MonoBehaviour
 
     public void Restart()
     {
-        _pieceQueue.Restart();
-
+        _pieceQueue.Clear();
         Start();
     }
 
@@ -63,10 +62,6 @@ public class Spawner : MonoBehaviour
 
     public void Swap()
     {
-        // Delete ghost object
-        Destroy(_playfield.GhostedPiece.gameObject);
-
-        // Swap pieces
         PieceEntity pieceEntity = _pieceQueue.Swap(_playfield.FieldPiece);
         SpawnPieceOnField(pieceEntity);
     }
