@@ -64,7 +64,7 @@ public static class GameDefinitions
     private static SpinTable _SRSP____L = _SRSP____R.GetSymmetric();
     private static SpinTable _SRSP_I__R = new(_T_SRSP_I);
     private static SpinTable _SRSP_I__L = _SRSP_I__R.GetSymmetric();
-    private static SpinTable _SRSP__180 = new SpinTable(_T_SRSP_180);
+    private static SpinTable _SRSP__180 = new(_T_SRSP_180);
 
     public static RotationSystem SRS_Plus = RotationSystem.Tetris(
         _SRSP____R, _SRSP____L,

@@ -33,7 +33,7 @@ public class RotationSystem
     }
     public override string ToString()
     {
-        return $"R=\n{SpinTables_R}\n\nL=\n{SpinTables_R}\n\nD180=\n{SpinTables_180}";
+        return $"R=\n{SpinTables_R}\n\nL=\n{SpinTables_L}\n\nD180=\n{SpinTables_180}";
     }
 
     // Z L O S I J T
