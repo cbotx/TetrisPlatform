@@ -1,27 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Skins;
 
 public class Playfield : MonoBehaviour
 {
     public const int s_Width = 10;
     public const int s_Height = 50;
-    private Transform[,] s_Field = new Transform[s_Width, s_Height];
+    private bool[,] s_Field = new bool[s_Width, s_Height];
 
     public PieceEntity GhostedPiece { get; set; }
     public PieceEntity FieldPiece { get; set; }
 
     public Spawner spawner = null;
 
+    public SkinBase skin { get; set; }
+
+    private TilemapField _tilemapBack = null;
+
     public TetrisRule rule = GameDefinitions.Tetris_SRS_Plus;
+
+
+    // public string SkinFileName = "jstris7.png";
+    public string SkinFileName = "simple_connected.zip";
 
     private void Awake()
     {
         spawner = GetComponentInChildren<Spawner>();
+        skin = SkinLoader.LoadSkin(SkinFileName);
+        _tilemapBack = GetComponentInChildren<TilemapField>();
+        _tilemapBack.SetSkin(skin);
     }
     public bool HasEntityAt(int x, int y)
     {
-        return s_Field[x, y] != null;
+        return s_Field[x, y];
     }
 
     public bool HitTest(Vector3 position, PieceShape shape, Vector2Int offset)
@@ -43,18 +55,16 @@ public class Playfield : MonoBehaviour
     public void FreezePiece()
     {
         // Set field
+        List<Vector2Int> shape = new();
         foreach (Transform child in FieldPiece.transform)
         {
             int x = Mathf.RoundToInt(child.transform.position.x);
             int y = Mathf.RoundToInt(child.transform.position.y);
-            s_Field[x, y] = child;
+            s_Field[x, y] = true;
+            shape.Add(new Vector2Int(x, y));
         }
-
-        // Reparent subtiles
-        for (int i = FieldPiece.transform.childCount - 1; i >= 0; --i)
-        {
-            FieldPiece.transform.GetChild(i).SetParent(transform);
-        }
+        _tilemapBack.AddPieceTiles(new PieceShape(shape), FieldPiece.PieceId);
+         
         Destroy(FieldPiece.gameObject);
         Destroy(GhostedPiece.gameObject);
         ClearLines();
@@ -71,7 +81,7 @@ public class Playfield : MonoBehaviour
             bool full = true;
             for (int j = 0; j < s_Width; ++j)
             {
-                if (s_Field[j, i] == null)
+                if (!s_Field[j, i])
                 {
                     full = false;
                     break;
@@ -102,9 +112,9 @@ public class Playfield : MonoBehaviour
     {
         for (int j = 0; j < s_Width; ++j)
         {
-            Destroy(s_Field[j, lineIdx].gameObject);
-            s_Field[j, lineIdx] = null;
+            s_Field[j, lineIdx] = false;
         }
+        _tilemapBack.DeleteLine(lineIdx);
     }
 
     private void MoveLineEntities(int lineIdx, int offset)
@@ -113,9 +123,11 @@ public class Playfield : MonoBehaviour
         {
             if (s_Field[j, lineIdx])
             {
-                s_Field[j, lineIdx].transform.position += new Vector3(0, -offset, 0);
-                s_Field[j, lineIdx - offset] = s_Field[j, lineIdx];
-                s_Field[j, lineIdx] = null;
+                _tilemapBack.SetTile(new Vector3Int(j, lineIdx - offset, 0), _tilemapBack.GetTile(new Vector3Int(j, lineIdx)));
+                _tilemapBack.SetTile(new Vector3Int(j, lineIdx), null);
+
+                s_Field[j, lineIdx - offset] = true;
+                s_Field[j, lineIdx] = false;
             }
         }
     }

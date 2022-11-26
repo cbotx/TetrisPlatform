@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 public static class GameDefinitions
 {
-    public static PieceType[] Tetriminos = new PieceType[]{
+    public static PieceType[] Tetrominos = new PieceType[]{
         new PieceType("Z",
             new PieceShape( 0, 0 ,  1, 0 , -1, 1 ,  0, 1),
             new Vector2(0, 0)
@@ -74,7 +74,7 @@ public static class GameDefinitions
 
 
     // Z L O S I J T
-    public static TetrisRule Tetris_SRS_Plus = new(Tetriminos, SRS_Plus);
+    public static TetrisRule Tetris_SRS_Plus = new(Tetrominos, SRS_Plus);
 
 
     static GameDefinitions(){
