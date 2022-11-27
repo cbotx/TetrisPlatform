@@ -25,10 +25,16 @@ public class Spawner : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+        _gen = _playfield.pieceGenerator;
+        InitializePieces();
+    }
+
+    private void InitializePieces()
+    {
         _bagIdx = 0;
         GenerateBag();
         _pieceQueue.SetSwap(GetNextPieceEntity());
-        
+
         for (int i = 0; i < PieceQueue.QueueSize; ++i) _pieceQueue.PushPiece(GetNextPieceEntity());
         PieceEntity pieceEntity = _pieceQueue.PushAndGetPiece(GetNextPieceEntity());
         SpawnPieceOnField(pieceEntity);
@@ -37,7 +43,7 @@ public class Spawner : MonoBehaviour
     public void Restart()
     {
         _pieceQueue.Clear();
-        Start();
+        InitializePieces();
     }
 
     private PieceEntity SpawnPieceOnField(PieceEntity pieceEntity)
