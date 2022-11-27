@@ -13,11 +13,13 @@ public class Spawner : MonoBehaviour
 
     private Playfield _playfield = null;
     private PieceQueue _pieceQueue = null;
+    private PieceGenerator _gen;
 
     private void Awake()
     {
         _playfield = GetComponentInParent<Playfield>();
         _pieceQueue = _playfield.GetComponentInChildren<PieceQueue>();
+        _gen = _playfield.pieceGenerator;
     }
 
     // Start is called before the first frame update
@@ -46,7 +48,7 @@ public class Spawner : MonoBehaviour
         _playfield.FieldPiece = pieceEntity;
 
         // Spawn ghost piece
-        PieceEntity ghostPiece = PieceConstructor.ConstructPiece(pieceEntity.PieceId, _playfield.transform, true, _playfield.skin);
+        PieceEntity ghostPiece = _gen.NewPiece(pieceEntity.PieceId, true);
         ghostPiece.transform.position = pieceEntity.transform.position;
         ghostPiece.enabled = false;
         _playfield.GhostedPiece = ghostPiece;
@@ -86,6 +88,6 @@ public class Spawner : MonoBehaviour
     }
 
     private PieceEntity GetNextPieceEntity() {
-        return PieceConstructor.ConstructPiece(GetNextPieceFromBag(), _playfield.transform, false, _playfield.skin);
+        return _gen.NewPiece(GetNextPieceFromBag(), false);
     }
 }
