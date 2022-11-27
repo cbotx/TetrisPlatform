@@ -35,7 +35,7 @@ public static class ControllerConfigDefinitions
         DCD = 17 * 0.001f,
         SDF = 10000,
         ACH = 50 * 0.001f,
-        DCR = 17 * 0.001f,
+        DCR = 50 * 0.001f,
     };
 
 }

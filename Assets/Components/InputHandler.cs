@@ -64,11 +64,11 @@ public class InputHandler: MonoBehaviour
         }
         if (input.GetKeyDown(Op.MoveLeft))
         {
-            controller.MoveKeyDown(true);
+            controller.MoveLeft();
         }
         if (input.GetKeyDown(Op.MoveRight))
         {
-            controller.MoveKeyDown(false);
+            controller.MoveRight();
         }
         if (input.GetKeyDown(Op.RotateRight))
         {
