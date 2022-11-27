@@ -42,11 +42,11 @@ public class PieceQueue : MonoBehaviour
     {
         foreach (PieceEntity obj in _queue)
         {
-            obj.transform.localPosition += new Vector3(0, 4, 0);
+            obj.transform.localPosition += new Vector3(0, 3.75f, 0);
         }
 
         pieceEntity.transform.SetParent(_nextQueueGO.transform, false);
-        pieceEntity.transform.localPosition = -pieceEntity.PieceType.barycenter;
+        pieceEntity.transform.localPosition = -pieceEntity.PieceType.barycenter ;
         pieceEntity.enabled = false;
         _queue.Add(pieceEntity);
     }
@@ -65,7 +65,7 @@ public class PieceQueue : MonoBehaviour
         pieceEntity.UpdatePieceTexture(_playfield.skin);
 
         pieceEntity.transform.SetParent(_swapGO.transform, false);
-        pieceEntity.transform.position = _swapGO.transform.position;
+        pieceEntity.transform.localPosition = -pieceEntity.PieceType.barycenter;
         pieceEntity.transform.rotation = Quaternion.identity;
         pieceEntity.enabled = false;
         PieceEntity oldPiece = _swapPiece;
