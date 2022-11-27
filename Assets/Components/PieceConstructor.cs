@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Assets.Skins;
+using Assets.Definitions;
 public static class PieceConstructor
 {
+
     private readonly static int[,,] pieceTable =
     {
         {{ 0, 0 }, {1, 0}, {-1, 1 }, { 0, 1 }},
@@ -35,25 +37,36 @@ public static class PieceConstructor
         GameObject pieceGameObject = new();
         pieceGameObject.name = (isGhost ? "Ghost" : "") + nameTable[pieceId];
 
-        List<Tile> tiles = skin.GetPieceTiles(GameDefinitions.Tetrominos[pieceId].BaseShape, isGhost ? 7 : pieceId);
-        for (int i = 0; i < 4; ++i)
+        List<Tile> tiles = skin.GetPieceTiles(GameDefinitions.Tetrominos[pieceId].BaseShape, pieceId);
+        List<Tile> ghostTiles = null;
+        if (isGhost)
+        {
+            ghostTiles = skin.GetPieceTiles(GameDefinitions.Tetrominos[pieceId].BaseShape, 7);
+        }
+            for (int i = 0; i < 4; ++i)
         {
             GameObject tileObject = new();
             tileObject.name = i.ToString();
-            tileObject.AddComponent<SpriteRenderer>();
+            SpriteRenderer renderer = tileObject.AddComponent<SpriteRenderer>();
             //tileObject.AddComponent<BlockRotation>()
             //    .Set(pieceType, i);
-
-            SpriteRenderer renderer = tileObject.GetComponent<SpriteRenderer>();
+            
             renderer.sprite = tiles[i].sprite;
             renderer.sortingOrder = isGhost ? 0 : 1;
+            if (isGhost)
+            {
+                renderer.material = MaterialDefinitions.material_AlphaMask;
+                renderer.material.SetTexture("_Alpha", ghostTiles[i].sprite.texture);
+                float offsetUnit = 1.0f * skin.TileWidth / ghostTiles[i].sprite.texture.width;
+                renderer.material.SetTextureScale("_Alpha", new Vector2(2, 2));
+                renderer.material.SetTextureOffset("_Alpha", new Vector2(-offsetUnit * SkinDefinitions.ConnectedTexturePosition[pieceId, 0], offsetUnit * SkinDefinitions.ConnectedTexturePosition[pieceId, 1]));
+            }
 
             tileObject.transform.SetParent(pieceGameObject.transform);
             tileObject.transform.position = new Vector2(pieceTable[pieceId, i, 0], pieceTable[pieceId, i, 1]);
         }
         pieceGameObject.transform.SetParent(parent);
-        pieceGameObject.AddComponent<PieceEntity>();
-        PieceEntity pieceEntity = pieceGameObject.GetComponent<PieceEntity>();
+        PieceEntity pieceEntity = pieceGameObject.AddComponent<PieceEntity>();
         pieceEntity.PieceType = pieceType;
         pieceEntity.RotationPoint = pieceRotationPointTable[pieceId];
         pieceEntity.PieceId = pieceId;
