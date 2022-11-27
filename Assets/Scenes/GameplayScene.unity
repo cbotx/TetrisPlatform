@@ -235,6 +235,7 @@ GameObject:
   - component: {fileID: 97087274}
   - component: {fileID: 97087273}
   - component: {fileID: 97087275}
+  - component: {fileID: 97087276}
   m_Layer: 0
   m_Name: Playfield
   m_TagString: Untagged
@@ -325,7 +326,53 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawner: {fileID: 0}
+  control:
+    main:
+      MoveLeft: 276
+      MoveRight: 275
+      SoftDrop: 273
+      HardDrop: 32
+      Hold: 304
+      RotateRight: 100
+      RotateLeft: 97
+      Rotate180: 119
+      Exit: 27
+      Retry: 96
+    sub:
+      MoveLeft: 0
+      MoveRight: 0
+      SoftDrop: 0
+      HardDrop: 0
+      Hold: 0
+      RotateRight: 0
+      RotateLeft: 0
+      Rotate180: 0
+      Exit: 0
+      Retry: 0
+    third:
+      MoveLeft: 0
+      MoveRight: 0
+      SoftDrop: 0
+      HardDrop: 0
+      Hold: 0
+      RotateRight: 0
+      RotateLeft: 0
+      Rotate180: 0
+      Exit: 0
+      Retry: 0
   SkinFileName: simple_connected.zip
+--- !u!114 &97087276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 97087272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22ad6fbabd99d4d4fadb0961a20aeb15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &163643888
 GameObject:
   m_ObjectHideFlags: 0

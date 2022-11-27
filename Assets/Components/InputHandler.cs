@@ -33,6 +33,7 @@ public class InputHandler: MonoBehaviour
     private void Awake()
     {
         _playfield = GetComponentInParent<Playfield>();
+        input = _playfield.control.Input;
     }
 
     public void Start()

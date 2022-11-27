@@ -11,7 +11,6 @@ public class PieceEntity : MonoBehaviour
     public static float s_WaitBeforeRepeatInterval = 0.15f;
     public static float s_TimeTillFreeze = 1.5f;
 
-    public Vector3 RotationPoint;
     private PieceShape _shape;
     public PieceShape Shape
     {
@@ -49,111 +48,21 @@ public class PieceEntity : MonoBehaviour
     private int _pieceId;
     public int PieceId { 
         get => _pieceId;
-        set { 
-            _pieceId = value; 
-            _shape = _playfield.rule.shapesOfPiece[value][direction]; 
+        set {
+            _kickTable = _playfield.rule.kickTableOfPiece[value];
+            _shapes = _playfield.rule.shapesOfPiece[value];
+            _shape = _shapes[direction];
+            _pieceId = value;
         }
     }
+
+    private KickTable _kickTable;
+    private PieceShape[] _shapes;
+
     private void Awake()
     {
         _playfield = GetComponentInParent<Playfield>();
     }
-
-    // Start is called before the first frame update
-    private void Start()
-    {
-        
-    }
-
-    /*
-    // Update is called once per frame
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.BackQuote))
-        {
-            _playfield.Restart();
-            return;
-        }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            HardDrop();
-        }
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            _playfield.Swap();
-            return;
-        }
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            _moveLeft = true;
-            _moveRight = false;
-            _repeat = false;
-            Move(-1, 0);
-            _prevUpdateTime = Time.time;
-        }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            _moveLeft = false;
-            _moveRight = true;
-            _repeat = false;
-            Move(1, 0);
-            _prevUpdateTime = Time.time;
-        }
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            Rotate(3);
-        }
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            Rotate(1);
-        }
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            Rotate(2);
-        }
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            Move(0, -1);
-            _prevFallTime = Time.time;
-        }
-        if (!Input.GetKey(KeyCode.LeftArrow)) _moveLeft = false;
-        if (!Input.GetKey(KeyCode.RightArrow)) _moveRight = false;
-        if (_moveLeft || _moveRight)
-        {
-            int move_x = _moveLeft ? -1 : 1;
-            if (_repeat)
-            {
-                if (Time.time - _prevUpdateTime >= s_RepeatInterval)
-                {
-                    Move(move_x, 0);
-                    _prevUpdateTime += s_RepeatInterval;
-                }
-            } else
-            {
-                if (Time.time - _prevUpdateTime >= s_WaitBeforeRepeatInterval)
-                {
-                    Move(move_x, 0);
-                    _prevUpdateTime += s_WaitBeforeRepeatInterval;
-                    _repeat = true;
-                }
-            }
-        } else
-        {
-            _repeat = false;
-        }
-        float interval = Input.GetKey(KeyCode.UpArrow) ? s_RepeatInterval : s_FallInterval;
-        if (Time.time - _prevFallTime >= interval)
-        {
-            Move(0, -1);
-            _prevFallTime += interval;
-        }
-        if (_isBottomTouched && Time.time - _prevBottomTouchTime + _freezeTime >= s_TimeTillFreeze)
-        {
-            _playfield.FreezePiece();
-        }
-
-    }
-    */
 
 
     public void Initialize()
@@ -166,22 +75,19 @@ public class PieceEntity : MonoBehaviour
     public void GhostDrop()
     {
         Vector3 v = new(0, -1, 0);
-        while (IsValid()) transform.position += v;
-        transform.position -= v;
+        while (IsValid(0,-1)) transform.position += v;
     }
 
     public PieceEntity HardDrop()
     {
         Vector3 v = new(0, -1, 0);
-        while (IsValid()) transform.position += v;
-        transform.position -= v;
+        while (IsValid(0, -1)) transform.position += v;
         return _playfield.FreezePiece();
     }
     public void Move(int x, int y)
     {
         Vector3 v = new(x, y, 0);
-        transform.position += v;
-        if (!IsValid()) transform.position -= v;
+        if (IsValid(x, y)) transform.position += v;
         PostMovement();
     }
 
@@ -197,9 +103,9 @@ public class PieceEntity : MonoBehaviour
 
     public void BottomTest()
     {
-        Vector3 v = new(0, -1, 0);
-        transform.position += v;
-        if (!IsValid())
+        //Vector3 v = new(0, -1, 0);
+        //transform.position += v;
+        if (!IsValid(0, -1))
         {
             if (!_isBottomTouched)
             {
@@ -215,16 +121,15 @@ public class PieceEntity : MonoBehaviour
                 _prevBottomTouchTime = Time.time;
             }
         }
-        transform.position -= v;
+        //transform.position -= v;
     }
 
     public bool Rotate(int rotation)
     {
         int newDirection = (direction + rotation) % 4;
-        Vector2Int[] attempts = _playfield.rule.kickTableOfPiece[PieceId][rotation, direction];
+        Vector2Int[] attempts = _kickTable[rotation, direction];
+        PieceShape newShape = _shapes[newDirection];
 
-        PieceShape newShape = _playfield.rule.shapesOfPiece[PieceId][newDirection];
-        int i = 0;
         foreach (Vector2Int attempt in attempts)
         {
             if(!_playfield.HitTest(transform.position, newShape, attempt))
@@ -232,9 +137,6 @@ public class PieceEntity : MonoBehaviour
                 Shape = newShape;
                 _playfield.GhostedPiece.Shape = newShape;
                 transform.localPosition += new Vector3(attempt.x, attempt.y, 0f);
-
-                // Debug.Log($"rotation: {rotation} ({direction}->{newDirection}), attempt #{i} success: {attempt}");
-
                 direction = newDirection;
 
                 // For connected texture
@@ -245,8 +147,6 @@ public class PieceEntity : MonoBehaviour
 
                 return true;
             }
-
-            i++;
         }
         return false;
 
@@ -278,9 +178,9 @@ public class PieceEntity : MonoBehaviour
     }
 
 
-    private bool IsValid()
+    private bool IsValid(int x, int y)
     {
-        return !_playfield.HitTest(transform.position, _shape, Vector2Int.zero);
+        return !_playfield.HitTest(transform.position, _shape, new Vector2Int(x,y));
     }
 
 

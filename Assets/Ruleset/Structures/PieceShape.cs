@@ -33,6 +33,7 @@ public struct PieceShape
         (x,y,cx,cy) => new(-y + (cx + cy) / 2, x + (-cx + cy) / 2), // face Left
     };
 
+
     public PieceShape RotateAround(Vector2 center, int rotation)
     {
         int cx = Mathf.RoundToInt(center.x * 2);

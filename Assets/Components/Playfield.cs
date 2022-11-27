@@ -20,8 +20,8 @@ public class Playfield : MonoBehaviour
 
     public TetrisRule rule = GameDefinitions.Tetris_SRS_Plus;
     public KeyConfigs control = ControlDefinitions.cirq;
+    public PieceGenerator pieceGenerator;
 
-    private InputHandler _input;
 
 
     // public string SkinFileName = "jstris7.png";
@@ -33,8 +33,8 @@ public class Playfield : MonoBehaviour
         skin = SkinLoader.LoadSkin(SkinFileName);
         _tilemapField = GetComponentInChildren<TilemapField>();
         _tilemapField.SetSkin(skin);
-        _input = GetComponent<InputHandler>();
-        _input.input = control.Input;
+
+        pieceGenerator = new PieceGenerator(transform, skin, rule);
     }
 
     private void Start()
