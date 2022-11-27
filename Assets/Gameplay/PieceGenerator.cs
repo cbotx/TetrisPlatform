@@ -27,16 +27,16 @@ public class PieceGenerator
 
         Vector3[] blocks = pieceType.BaseShape.ToVector3Array();
 
-        List<Tile> tiles = skin.GetPieceTiles(rule[pieceId].BaseShape, pieceId);
+        List<Tile> tiles = skin.GetPieceTiles(pieceType.BaseShape, pieceId);
         List<Tile> ghostTiles = null;
         if (isGhost)
-        {
-            ghostTiles = skin.GetPieceTiles(rule[pieceId].BaseShape, 7);
-        }
+            ghostTiles = skin.GetPieceTiles(pieceType.BaseShape, 7);
+ 
         for (int i = 0; i < 4; ++i)
         {
-            GameObject tileObject = new();
-            tileObject.name = i.ToString();
+            GameObject tileObject = new()¡¡{
+                name = i.ToString()
+            };
 
             SpriteRenderer renderer = tileObject.AddComponent<SpriteRenderer>();
             renderer.sprite = tiles[i].sprite;
