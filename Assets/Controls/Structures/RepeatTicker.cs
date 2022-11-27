@@ -95,7 +95,7 @@ public struct DelayedRepeatTicker
         if (!wasPressing && isPressing)
         {
             wasPressing = true;
-            return 1;
+            return 0;
         }
 
         if (wasPressing && !isPressing)

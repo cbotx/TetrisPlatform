@@ -22,7 +22,7 @@ public class Playfield : MonoBehaviour
 
     public TetrisRule rule = GameDefinitions.Tetris_SRS_Plus;
     public KeyConfigs control = KeyConfigDefinitions.cirq;
-    public ControllerConfigs handling = ControllerConfigs.Default; //ControllerConfigDefinitions.cirq;  // ControllerConfigs.Default;
+    public ControllerConfigs handling = ControllerConfigs.Default; // ControllerConfigDefinitions.cirq;  // ControllerConfigs.Default;
     public PieceGenerator pieceGenerator;
     public TetrisGameplay game;
 
