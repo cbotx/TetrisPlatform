@@ -23,6 +23,7 @@ public class Spawner : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+        _bagIdx = 0;
         GenerateBag();
         _pieceQueue.SetSwap(GetNextPieceEntity());
         
@@ -37,7 +38,7 @@ public class Spawner : MonoBehaviour
         Start();
     }
 
-    private void SpawnPieceOnField(PieceEntity pieceEntity)
+    private PieceEntity SpawnPieceOnField(PieceEntity pieceEntity)
     {
         // Transfer piece to field
         pieceEntity.transform.position = transform.position;
@@ -51,19 +52,19 @@ public class Spawner : MonoBehaviour
         _playfield.GhostedPiece = ghostPiece;
         ghostPiece.GhostDrop();
 
-
+        return pieceEntity;
     }
 
-    public void NextPiece()
+    public PieceEntity NextPiece()
     {
         PieceEntity pieceEntity = _pieceQueue.PushAndGetPiece(GetNextPieceEntity());
-        SpawnPieceOnField(pieceEntity);
+        return SpawnPieceOnField(pieceEntity);
     }
 
-    public void Swap()
+    public PieceEntity Swap()
     {
         PieceEntity pieceEntity = _pieceQueue.Swap(_playfield.FieldPiece);
-        SpawnPieceOnField(pieceEntity);
+        return SpawnPieceOnField(pieceEntity);
     }
 
     private void GenerateBag()
