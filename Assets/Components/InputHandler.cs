@@ -60,7 +60,8 @@ public class InputHandler: MonoBehaviour
         }
         if (input.GetKeyDown(Op.Hold))
         {
-            _piece = _playfield.Swap();
+            var res = _playfield.Swap();
+            if (res is not null) _piece = res;
         }
         if (input.GetKeyDown(Op.MoveLeft))
         {

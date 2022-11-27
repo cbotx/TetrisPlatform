@@ -40,7 +40,7 @@ public struct SimpleTimer
     {
         if (!enabled) return true;
 
-        duration += Time.smoothDeltaTime;
+        duration += Time.deltaTime;
         if (duration < interval) return false;
 
         enabled = false;
@@ -63,7 +63,7 @@ public struct RepeatTicker
 
     public int Update(float speed)
     {
-        duration += Time.smoothDeltaTime * speed;
+        duration += Time.deltaTime * speed;
         if (duration < interval) return 0;
 
         int times = Mathf.FloorToInt((duration - interval) / interval) + 1;
@@ -108,7 +108,7 @@ public struct DelayedRepeatTicker
 
         if (!isPressing) return 0;
 
-        duration += Time.smoothDeltaTime;
+        duration += Time.deltaTime;
         if (duration < nextTime) return 0;
 
         int times = Mathf.FloorToInt((duration - nextTime) / interval) + 1;
