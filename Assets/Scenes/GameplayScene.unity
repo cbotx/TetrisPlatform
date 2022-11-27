@@ -360,7 +360,7 @@ MonoBehaviour:
       Rotate180: 0
       Exit: 0
       Retry: 0
-  SkinFileName: simple_connected.zip
+  SkinFileName: jstris7.png
 --- !u!114 &97087276
 MonoBehaviour:
   m_ObjectHideFlags: 0

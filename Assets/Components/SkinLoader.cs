@@ -21,7 +21,7 @@ public static class SkinLoader
             skin.TileWidth = tileSise;
             for (int i = 0; i < 8; ++i)
             {
-                skin.s_simpleSprites[i] = Sprite.Create(texture, new Rect(new Vector2(i * (tileSise + 1), 0), new Vector2(tileSise, tileSise)), new Vector2(0.5f, 0.5f), tileSise);
+                skin.s_simpleSprites[i] = Sprite.Create(texture, new Rect(new Vector2(i * (tileSise + 1) + 1, 1), new Vector2(tileSise - 2, tileSise - 2)), new Vector2(0.5f, 0.5f), tileSise - 2);
                 skin.s_tiles[i] = ScriptableObject.CreateInstance<Tile>();
                 skin.s_tiles[i].sprite = skin.s_simpleSprites[i];
             }

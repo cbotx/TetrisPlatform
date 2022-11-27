@@ -36,4 +36,11 @@ public sealed class DefaultSkin : SkinBase
     {
         return tile;
     }
+    public override void SetMaskForTile(SpriteRenderer renderer, Texture2D texture, int pieceId)
+    {
+        float offsetUnit = 1.0f * (TileWidth + 1) / texture.width;
+        renderer.material = MaterialDefinitions.material_AlphaMask;
+        renderer.material.SetTexture("_Alpha", texture);
+        renderer.material.SetTextureOffset("_Alpha", new Vector2(offsetUnit * (7 - pieceId), 0));
+    }
 }

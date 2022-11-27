@@ -66,4 +66,12 @@ public sealed class ConnectedSkin : SkinBase
     {
         return TileCutBottomEntityMapping[tile];
     }
+    public override void SetMaskForTile(SpriteRenderer renderer, Texture2D texture, int pieceId)
+    {
+        float offsetUnit = 1.0f * TileWidth / texture.width;
+        renderer.material = MaterialDefinitions.material_AlphaMask;
+        renderer.material.SetTexture("_Alpha", texture);
+        renderer.material.SetTextureScale("_Alpha", new Vector2(2, 2));
+        renderer.material.SetTextureOffset("_Alpha", new Vector2(-offsetUnit * SkinDefinitions.ConnectedTexturePosition[pieceId, 0], offsetUnit * SkinDefinitions.ConnectedTexturePosition[pieceId, 1]));
+    }
 }

@@ -24,8 +24,8 @@ public class Playfield : MonoBehaviour
 
 
 
-    // public string SkinFileName = "jstris7.png";
-    public string SkinFileName = "simple_connected.zip";
+    public string SkinFileName = "jstris7.png";
+    // public string SkinFileName = "simple_connected.zip";
 
     private void Awake()
     {

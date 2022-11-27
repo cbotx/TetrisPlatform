@@ -44,11 +44,7 @@ public class PieceGenerator
 
             if (isGhost)
             {
-                renderer.material = MaterialDefinitions.material_AlphaMask;
-                renderer.material.SetTexture("_Alpha", ghostTiles[i].sprite.texture);
-                float offsetUnit = 1.0f * skin.TileWidth / ghostTiles[i].sprite.texture.width;
-                renderer.material.SetTextureScale("_Alpha", new Vector2(2, 2));
-                renderer.material.SetTextureOffset("_Alpha", new Vector2(-offsetUnit * SkinDefinitions.ConnectedTexturePosition[pieceId, 0], offsetUnit * SkinDefinitions.ConnectedTexturePosition[pieceId, 1]));
+                skin.SetMaskForTile(renderer, ghostTiles[i].sprite.texture, pieceId);
             }
 
             tileObject.transform.SetParent(pieceGameObject.transform);
