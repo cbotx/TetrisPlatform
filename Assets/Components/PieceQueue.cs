@@ -68,8 +68,9 @@ public class PieceQueue : MonoBehaviour
         pieceEntity.transform.localPosition = -pieceEntity.PieceType.barycenter;
         pieceEntity.transform.rotation = Quaternion.identity;
         pieceEntity.enabled = false;
+
         PieceEntity oldPiece = _swapPiece;
-        oldPiece.enabled = false;
+        oldPiece.enabled = true;
         oldPiece.transform.SetParent(_playfield.transform, false);
         _swapPiece = pieceEntity;
         return oldPiece;

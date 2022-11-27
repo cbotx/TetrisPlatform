@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public static class ControlDefinitions
+public static class KeyConfigDefinitions
 {
     public static KeyConfigs cirq = new()
     {
@@ -24,7 +24,18 @@ public static class ControlDefinitions
         }
     };
 
+}
 
-
+public static class ControllerConfigDefinitions
+{
+    public static ControllerConfigs cirq = new()
+    {
+        ARR = 3 * 0.001f,
+        DAS = 117 * 0.001f,
+        DCD = 17 * 0.001f,
+        SDF = 10000,
+        ACH = 50 * 0.001f,
+        DCR = 17 * 0.001f,
+    };
 
 }
