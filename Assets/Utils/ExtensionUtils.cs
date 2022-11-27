@@ -29,7 +29,10 @@ public static class ExtensionUtils
         yield return values;
     }
 
-
+    public static TEnum ToEnum<TEnum>(this string str) where TEnum : struct
+    {
+        return Enum.Parse<TEnum>(str);
+    }
 
     public static void DestroyAllChildren(this Transform parent)
     {

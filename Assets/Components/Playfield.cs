@@ -19,6 +19,9 @@ public class Playfield : MonoBehaviour
     private TilemapField _tilemapField = null;
 
     public TetrisRule rule = GameDefinitions.Tetris_SRS_Plus;
+    public KeyConfigs control = ControlDefinitions.cirq;
+
+    private InputHandler _input;
 
 
     // public string SkinFileName = "jstris7.png";
@@ -30,6 +33,12 @@ public class Playfield : MonoBehaviour
         skin = SkinLoader.LoadSkin(SkinFileName);
         _tilemapField = GetComponentInChildren<TilemapField>();
         _tilemapField.SetSkin(skin);
+        _input = GetComponent<InputHandler>();
+        _input.input = control.Input;
+    }
+
+    private void Start()
+    {
     }
     public bool HasEntityAt(int x, int y)
     {
@@ -61,13 +70,13 @@ public class Playfield : MonoBehaviour
         spawner.Restart();
     }
 
-    public void Swap()
+    public PieceEntity Swap()
     {
         Destroy(GhostedPiece.gameObject);
-        spawner.Swap();
+        return spawner.Swap();
     }
 
-    public void FreezePiece()
+    public PieceEntity FreezePiece()
     {
         // Set field
         List<Vector2Int> shape = new();
@@ -85,7 +94,7 @@ public class Playfield : MonoBehaviour
         ClearLines();
 
         // Spawn new piece
-        spawner.NextPiece();
+        return spawner.NextPiece();
     }
     private void ClearLines()
     {

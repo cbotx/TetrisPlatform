@@ -65,6 +65,7 @@ public class PieceEntity : MonoBehaviour
         
     }
 
+    /*
     // Update is called once per frame
     private void Update()
     {
@@ -152,6 +153,8 @@ public class PieceEntity : MonoBehaviour
         }
 
     }
+    */
+
 
     public void Initialize()
     {
@@ -167,12 +170,12 @@ public class PieceEntity : MonoBehaviour
         transform.position -= v;
     }
 
-    public void HardDrop()
+    public PieceEntity HardDrop()
     {
         Vector3 v = new(0, -1, 0);
         while (IsValid()) transform.position += v;
         transform.position -= v;
-        _playfield.FreezePiece();
+        return _playfield.FreezePiece();
     }
     public void Move(int x, int y)
     {
