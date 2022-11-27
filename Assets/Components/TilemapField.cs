@@ -25,7 +25,7 @@ public class TilemapField : MonoBehaviour
 
     public void AddPieceTiles(PieceShape shape, int pieceId)
     {
-        List<Tile> tiles = _skin.GetPieceTiles(shape, pieceId);
+        List<TileBase> tiles = _skin.GetPieceTiles(shape, pieceId);
         for (int i = 0; i < shape.blocks.Length; ++i)
         {
             _tilemap.SetTile(new Vector3Int(shape.blocks[i].x, shape.blocks[i].y), tiles[i]);

@@ -16,7 +16,9 @@ namespace Assets.Skins
         public int TileWidth { get; set; }
 
         public abstract void PostLoading();
-        public abstract List<Tile> GetPieceTiles(PieceShape shape, int type);
+        public abstract List<TileBase> GetPieceTiles(PieceShape shape, int type);
+
+        public abstract List<Sprite> GetPieceSprites(PieceShape shape, int type);
         public abstract TileBase GetTileCutTop(TileBase tile);
         public abstract TileBase GetTileCutBottom(TileBase tile);
 

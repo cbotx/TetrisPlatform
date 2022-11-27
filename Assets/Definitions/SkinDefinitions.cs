@@ -13,6 +13,7 @@ namespace Assets.Definitions
     {
         // Tile starting position in texture image for each piece
         public static int[,] ConnectedTexturePosition = { { 0, 0 }, { 4, 0 }, { 8, 0 }, { 12, 0 }, { 0, 6 }, { 4, 6 }, { 8, 6 }, { 0, 0 } };
+        public static int DefaultAnimationSpeed = 30;
 
         public static int GetDefaultTextureTileSize(int textureWidth)
         {

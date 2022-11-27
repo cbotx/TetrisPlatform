@@ -27,10 +27,10 @@ public class PieceGenerator
 
         Vector3[] blocks = pieceType.BaseShape.ToVector3Array();
 
-        List<Tile> tiles = skin.GetPieceTiles(pieceType.BaseShape, pieceId);
-        List<Tile> ghostTiles = null;
+        List<Sprite> sprites = skin.GetPieceSprites(pieceType.BaseShape, pieceId);
+        List<Sprite> ghostSprites = null;
         if (isGhost)
-            ghostTiles = skin.GetPieceTiles(pieceType.BaseShape, 7);
+            ghostSprites = skin.GetPieceSprites(pieceType.BaseShape, 7);
  
         for (int i = 0; i < 4; ++i)
         {
@@ -39,12 +39,12 @@ public class PieceGenerator
             };
 
             SpriteRenderer renderer = tileObject.AddComponent<SpriteRenderer>();
-            renderer.sprite = tiles[i].sprite;
+            renderer.sprite = sprites[i];
             renderer.sortingOrder = isGhost ? 0 : 1;
 
             if (isGhost)
             {
-                skin.SetMaskForTile(renderer, ghostTiles[i].sprite.texture, pieceId);
+                skin.SetMaskForTile(renderer, ghostSprites[i].texture, pieceId);
             }
 
             tileObject.transform.SetParent(pieceGameObject.transform);

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-
+using MG.GIF;
 
 namespace Assets.Utils
 {
@@ -23,6 +23,31 @@ namespace Assets.Utils
                     return texture;
                 }
             }
+            return null;
+        }
+
+        public static List<Texture2D> LoadTextureFromGIF(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                List<Texture2D> textures = new();
+                byte[] data = File.ReadAllBytes(filePath);
+
+                using (var decoder = new MG.GIF.Decoder(data))
+                {
+                    var img = decoder.NextImage();
+
+                    while (img != null)
+                    {
+                        textures.Add(img.CreateTexture());
+                        int delay = img.Delay;
+
+                        img = decoder.NextImage();
+                    }
+                }
+                return textures;
+            }
+
             return null;
         }
 

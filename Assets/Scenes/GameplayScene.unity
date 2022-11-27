@@ -360,7 +360,7 @@ MonoBehaviour:
       Rotate180: 0
       Exit: 0
       Retry: 0
-  SkinFileName: jstris7.png
+  SkinFileName: Shefs_kiss.gif
 --- !u!114 &97087276
 MonoBehaviour:
   m_ObjectHideFlags: 0

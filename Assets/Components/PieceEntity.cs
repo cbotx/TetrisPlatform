@@ -162,10 +162,10 @@ public class PieceEntity : MonoBehaviour
             int y = Mathf.RoundToInt(child.transform.position.y);
             shape.Add(new Vector2Int(x, y));
         }
-        List<Tile> tiles = skin.GetPieceTiles(new PieceShape(shape), PieceId);
+        List<Sprite> sprites = skin.GetPieceSprites(new PieceShape(shape), PieceId);
         for (int i = 0; i < transform.childCount; ++i)
         {
-            transform.GetChild(i).GetComponent<SpriteRenderer>().sprite = tiles[i].sprite;
+            transform.GetChild(i).GetComponent<SpriteRenderer>().sprite = sprites[i];
         }
     }
 

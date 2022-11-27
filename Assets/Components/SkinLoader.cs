@@ -27,7 +27,32 @@ public static class SkinLoader
             }
             skin.PostLoading();
             return skin;
-        } else if (suffix == "zip") {
+        }
+        else if (suffix == "gif")
+        {
+            AnimatedSkin skin = new();
+            List<Texture2D> textures = FileUtils.LoadTextureFromGIF(s_skinPath + skinFileName);
+            int tileSise = SkinDefinitions.GetDefaultTextureTileSize(textures.First().width);
+            skin.TileWidth = tileSise;
+            for (int i = 0; i < 8; ++i)
+            {
+                skin.s_tiles[i] = ScriptableObject.CreateInstance<AnimatedTile>();
+                Sprite[] sprites = new Sprite[textures.Count];
+                for (int j = 0; j < textures.Count; ++j)
+                {
+                    sprites[j] = Sprite.Create(textures[j], new Rect(new Vector2(i * (tileSise + 1) + 1, 1), new Vector2(tileSise - 2, tileSise - 2)), new Vector2(0.5f, 0.5f), tileSise - 2);
+                }
+                skin.s_tiles[i] = ScriptableObject.CreateInstance<AnimatedTile>();
+                skin.s_tiles[i].m_AnimatedSprites = sprites;
+                skin.s_tiles[i].m_MinSpeed = skin.AnimationSpeed;
+                skin.s_tiles[i].m_MaxSpeed = skin.AnimationSpeed;
+                skin.s_static_tiles[i] = ScriptableObject.CreateInstance<Tile>();
+                skin.s_static_tiles[i].sprite = sprites.First();
+            }
+            skin.PostLoading();
+            return skin;
+        }
+        else if (suffix == "zip") {
             ConnectedSkin skin = new();
             Dictionary<string, Texture2D> textures = FileUtils.LoadTexturesFromZip(s_skinPath + skinFileName);
             foreach (var item in textures)

@@ -30,9 +30,9 @@ public sealed class ConnectedSkin : SkinBase
         }
     }
 
-    public override List<Tile> GetPieceTiles(PieceShape shape, int type)
+    public override List<TileBase> GetPieceTiles(PieceShape shape, int type)
     {
-        List<Tile> tiles = new();
+        List<TileBase> tiles = new();
         foreach (var block in shape.blocks)
         {
             int neighborHash = 0;
@@ -58,6 +58,33 @@ public sealed class ConnectedSkin : SkinBase
         return tiles;
     }
 
+    public override List<Sprite> GetPieceSprites(PieceShape shape, int type)
+    {
+        List<Sprite> sprites = new();
+        foreach (var block in shape.blocks)
+        {
+            int neighborHash = 0;
+            // 7 6 5
+            // 4   3
+            // 2 1 0
+            // 0 is highest bit
+            for (int j = -1; j <= 1; ++j)
+            {
+                for (int i = 1; i >= -1; --i)
+                {
+                    if ((i | j) == 0) continue;
+                    neighborHash <<= 1;
+                    if (shape.blocks.Contains(block + new Vector2Int(i, j)))
+                    {
+                        neighborHash++;
+                    }
+                }
+            }
+            int tileId = SkinDefinitions.TileHashMapping[neighborHash];
+            sprites.Add(s_connectedTiles[type, tileId].sprite);
+        }
+        return sprites;
+    }
     public override TileBase GetTileCutTop(TileBase tile)
     {
         return TileCutTopEntityMapping[tile];

@@ -5,12 +5,13 @@ using UnityEngine.Tilemaps;
 using Assets.Utils;
 using Assets.Definitions;
 using Assets.Skins;
-public sealed class DefaultSkin : SkinBase
+public sealed class AnimatedSkin : SkinBase
 {
-    public Sprite[] s_simpleSprites = new Sprite[8];
-    public Tile[] s_tiles = new Tile[8];
-    
-    public DefaultSkin()
+    public AnimatedTile[] s_tiles = new AnimatedTile[8];
+    public Tile[] s_static_tiles = new Tile[8];
+    public int AnimationSpeed = SkinDefinitions.DefaultAnimationSpeed;
+
+    public AnimatedSkin()
     {
         SkinType = SkinType.Default;
     }
@@ -29,12 +30,13 @@ public sealed class DefaultSkin : SkinBase
         return tiles;
     }
 
+
     public override List<Sprite> GetPieceSprites(PieceShape shape, int type)
     {
         List<Sprite> sprites = new();
         for (int i = 0; i < shape.blocks.Length; ++i)
         {
-            sprites.Add(s_tiles[type].sprite);
+            sprites.Add(s_static_tiles[type].sprite);
         }
         return sprites;
     }
