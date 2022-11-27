@@ -27,11 +27,11 @@ public class PieceGenerator
 
         Vector3[] blocks = pieceType.BaseShape.ToVector3Array();
 
-        List<Tile> tiles = skin.GetPieceTiles(GameDefinitions.Tetrominos[pieceId].BaseShape, pieceId);
+        List<Tile> tiles = skin.GetPieceTiles(rule[pieceId].BaseShape, pieceId);
         List<Tile> ghostTiles = null;
         if (isGhost)
         {
-            ghostTiles = skin.GetPieceTiles(GameDefinitions.Tetrominos[pieceId].BaseShape, 7);
+            ghostTiles = skin.GetPieceTiles(rule[pieceId].BaseShape, 7);
         }
         for (int i = 0; i < 4; ++i)
         {
