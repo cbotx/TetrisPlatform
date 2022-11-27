@@ -22,10 +22,10 @@ public sealed class ConnectedSkin : SkinBase
         TileCutTopEntityMapping.Clear();
         TileCutBottomEntityMapping.Clear();
         for (int i = 0; i < 8; ++i) {
-            for (int j = 0; j < SkinDefinition.TileCutTopMapping.Length; ++j)
+            for (int j = 0; j < SkinDefinitions.TileCutTopMapping.Length; ++j)
             {
-                TileCutTopEntityMapping.Add(s_connectedTiles[i, j], s_connectedTiles[i, SkinDefinition.TileCutTopMapping[j]]);
-                TileCutBottomEntityMapping.Add(s_connectedTiles[i, j], s_connectedTiles[i, SkinDefinition.TileCutBottomMapping[j]]);
+                TileCutTopEntityMapping.Add(s_connectedTiles[i, j], s_connectedTiles[i, SkinDefinitions.TileCutTopMapping[j]]);
+                TileCutBottomEntityMapping.Add(s_connectedTiles[i, j], s_connectedTiles[i, SkinDefinitions.TileCutBottomMapping[j]]);
             }
         }
     }
@@ -52,7 +52,7 @@ public sealed class ConnectedSkin : SkinBase
                     }
                 }
             }
-            int tileId = SkinDefinition.TileHashMapping[neighborHash];
+            int tileId = SkinDefinitions.TileHashMapping[neighborHash];
             tiles.Add(s_connectedTiles[type, tileId]);
         }
         return tiles;

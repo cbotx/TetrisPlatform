@@ -13,6 +13,8 @@ namespace Assets.Skins
     {
         public SkinType SkinType = SkinType.Default;
 
+        public int TileWidth { get; set; }
+
         public abstract void PostLoading();
         public abstract List<Tile> GetPieceTiles(PieceShape shape, int type);
         public abstract TileBase GetTileCutTop(TileBase tile);

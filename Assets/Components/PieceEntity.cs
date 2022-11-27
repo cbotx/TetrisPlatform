@@ -162,7 +162,7 @@ public class PieceEntity : MonoBehaviour
             int y = Mathf.RoundToInt(child.transform.position.y);
             shape.Add(new Vector2Int(x, y));
         }
-        List<Tile> tiles = skin.GetPieceTiles(new PieceShape(shape), IsGhost ? 7 : PieceId);
+        List<Tile> tiles = skin.GetPieceTiles(new PieceShape(shape), PieceId);
         for (int i = 0; i < transform.childCount; ++i)
         {
             transform.GetChild(i).GetComponent<SpriteRenderer>().sprite = tiles[i].sprite;

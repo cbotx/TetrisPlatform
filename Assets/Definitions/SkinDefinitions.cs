@@ -9,8 +9,24 @@ using UnityEngine;
 
 namespace Assets.Definitions
 {
-    public static class SkinDefinition
+    public static class SkinDefinitions
     {
+        // Tile starting position in texture image for each piece
+        public static int[,] ConnectedTexturePosition = { { 0, 0 }, { 4, 0 }, { 8, 0 }, { 12, 0 }, { 0, 6 }, { 4, 6 }, { 8, 6 }, { 0, 0 } };
+
+        public static int GetDefaultTextureTileSize(int textureWidth)
+        {
+            return (textureWidth - 12) / 12;
+        }
+        public static int GetConnectedMinoTextureTileSize(int textureWidth)
+        {
+            return textureWidth / 64 * 3;
+        }
+        public static int GetConnectedGhostTextureTileSize(int textureWidth)
+        {
+            return textureWidth / 32 * 3;
+        }
+
         private static int _T_ = 1;
         private static int _F_ = 0;
         private static int ___ = -1;
@@ -124,7 +140,7 @@ namespace Assets.Definitions
         {
             12, 13, 14, 15, 8, 9, 10, 11, 8, 9, 10, 11, 12, 13, 14, 15, 13, 15, 18, 20, 20, 21, 14, 21
         };
-        static SkinDefinition()
+        static SkinDefinitions()
         {
             GenerateTileHashMapping();
         }
