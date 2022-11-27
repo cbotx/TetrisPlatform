@@ -43,10 +43,18 @@ public class MovementController
         rotated.Start();
     }
 
-    public void MoveKeyDown(bool isLeft)
+    public void MoveLeft()
     {
         rotated.Stop();
-        isLeftLast = isLeft;
+        isLeftLast = true;
+        move(-1, 0);
+    }
+
+    public void MoveRight()
+    {
+        rotated.Stop();
+        isLeftLast = false;
+        move(1, 0);
     }
 
     private bool isLeftLast;

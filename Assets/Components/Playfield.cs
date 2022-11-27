@@ -22,7 +22,7 @@ public class Playfield : MonoBehaviour
 
     public TetrisRule rule = GameDefinitions.Tetris_SRS_Plus;
     public KeyConfigs control = KeyConfigDefinitions.cirq;
-    public ControllerConfigs handling = ControllerConfigs.Default; //ControllerConfigDefinitions.cirq;  // ControllerConfigs.Default;
+    public ControllerConfigs handling =  ControllerConfigDefinitions.cirq;  // ControllerConfigs.Default; ControllerConfigs.Default; //
     public PieceGenerator pieceGenerator;
     public TetrisGameplay game;
 
@@ -76,16 +76,23 @@ public class Playfield : MonoBehaviour
         Destroy(FieldPiece.gameObject);
         Destroy(GhostedPiece.gameObject);
         spawner.Restart();
+        canSwap = true;
     }
+
+    public bool canSwap = true;
 
     public PieceEntity Swap()
     {
+        if (!canSwap) return null;
+
+        canSwap = false;
         Destroy(GhostedPiece.gameObject);
         return spawner.Swap();
     }
 
     public PieceEntity FreezePiece(bool isAutoFrzoen)
     {
+        canSwap = true;
         // Set field
         List<Vector2Int> shape = new();
         foreach (Transform child in FieldPiece.transform)

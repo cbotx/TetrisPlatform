@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-
+[Serializable]
 public struct ControllerConfigs
 {
     /// <summary>
@@ -28,12 +28,12 @@ public struct ControllerConfigs
     public float SDF;
 
     /// <summary>
-    /// Auto Cut Hard drop, after auto freeze. (100ms in default)
+    /// Auto Cut Hard drop, after auto freeze. (50ms in default)
     /// </summary>
     public float ACH;
 
     /// <summary>
-    /// DAS Cut delay, after Rotating . (17ms in default)
+    /// DAS Cut delay, after Rotating . (50ms in default)
     /// </summary>
     public float DCR;
 
@@ -43,8 +43,8 @@ public struct ControllerConfigs
         DAS = 150 * 0.001f,
         DCD = 17 * 0.001f,
         SDF = 30,
-        ACH = 100 * 0.001f,
-        DCR = 17 * 0.001f,
+        ACH = 50 * 0.001f,
+        DCR = 50 * 0.001f,
     };
 
 }

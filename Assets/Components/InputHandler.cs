@@ -60,15 +60,16 @@ public class InputHandler: MonoBehaviour
         }
         if (input.GetKeyDown(Op.Hold))
         {
-            _piece = _playfield.Swap();
+            var res = _playfield.Swap();
+            if (res is not null) _piece = res;
         }
         if (input.GetKeyDown(Op.MoveLeft))
         {
-            controller.MoveKeyDown(true);
+            controller.MoveLeft();
         }
         if (input.GetKeyDown(Op.MoveRight))
         {
-            controller.MoveKeyDown(false);
+            controller.MoveRight();
         }
         if (input.GetKeyDown(Op.RotateRight))
         {
