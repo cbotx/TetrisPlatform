@@ -38,4 +38,13 @@ public static class ControllerConfigDefinitions
         DCR = 50 * 0.001f,
     };
 
+    public static ControllerConfigs expert = new()
+    {
+        ARR = 17 * 0.001f,
+        DAS = 125 * 0.001f,
+        DCD = 17 * 0.001f,
+        SDF = 100,
+        ACH = 50 * 0.001f,
+        DCR = 50 * 0.001f,
+    };
 }

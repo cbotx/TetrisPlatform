@@ -8,11 +8,6 @@ using UnityEngine;
 
 public class InputHandler: MonoBehaviour
 {
-    public static float s_FallInterval = 1f;
-    public static float s_RepeatInterval = 0.03f;
-    public static float s_WaitBeforeRepeatInterval = 0.15f;
-    public static float s_TimeTillFreeze = 1.5f;
-
 
     public InputOperation input;
 
@@ -60,6 +55,7 @@ public class InputHandler: MonoBehaviour
         }
         if (input.GetKeyDown(Op.Hold))
         {
+            controller.Swapped();
             var res = _playfield.Swap();
             if (res is not null) _piece = res;
         }

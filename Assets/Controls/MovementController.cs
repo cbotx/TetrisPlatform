@@ -42,6 +42,10 @@ public class MovementController
     {
         rotated.Start();
     }
+    public void Swapped()
+    {
+        dropped.Start();
+    }
 
     public void MoveLeft()
     {
@@ -57,6 +61,7 @@ public class MovementController
         move(1, 0);
     }
 
+
     private bool isLeftLast;
 
     public void Update(bool left, bool right, bool softDrop)
@@ -68,14 +73,13 @@ public class MovementController
         int dropTimes = drop.Update(softDrop ? config.SDF : 1f);
 
         bool canDAS = dropped.Update() && rotated.Update();
-        bool isOverlayed = left && right;
 
 
-        if (left && (isLeftLast || !isOverlayed) && canDAS && leftTimes > 0)
+        if (left && (isLeftLast || !right) && canDAS && leftTimes > 0)
             for (int i = 0; i < leftTimes; i++)
                 if (!move(-1, 0)) break;
 
-        if (right && (!isLeftLast || !isOverlayed) && canDAS && rightTimes > 0)
+        if (right && (!isLeftLast || !left) && canDAS && rightTimes > 0)
             for (int i = 0; i < rightTimes; i++)
                 if (!move(1, 0)) break;
 

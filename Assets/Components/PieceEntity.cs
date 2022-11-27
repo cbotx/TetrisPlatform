@@ -6,9 +6,7 @@ using Assets.Definitions;
 
 public class PieceEntity : MonoBehaviour
 {
-    public static float s_FallInterval = 1f;
-    public static float s_RepeatInterval = 0.03f;
-    public static float s_WaitBeforeRepeatInterval = 0.15f;
+
     public static float s_TimeTillFreeze = 1.5f;
     public static float s_TotalTimeTillFreeze = 5f;
 

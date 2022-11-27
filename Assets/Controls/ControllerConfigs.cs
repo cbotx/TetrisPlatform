@@ -5,7 +5,7 @@ using UnityEngine;
 
 
 [Serializable]
-public struct ControllerConfigs
+public class ControllerConfigs
 {
     /// <summary>
     /// Automatic Repeat Rate. (30ms in default)
