@@ -34,7 +34,7 @@ public class PieceGenerator
  
         for (int i = 0; i < 4; ++i)
         {
-            GameObject tileObject = new()¡¡{
+            GameObject tileObject = new() {
                 name = i.ToString()
             };
 
@@ -60,6 +60,7 @@ public class PieceGenerator
         pieceEntity.PieceType = pieceType;
         pieceEntity.PieceId = pieceId;
         pieceEntity.IsGhost = isGhost;
+        pieceEntity.enabled = false;
         return pieceEntity;
     }
 }

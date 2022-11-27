@@ -18,10 +18,13 @@ public class Playfield : MonoBehaviour
 
     private TilemapField _tilemapField = null;
 
-    public TetrisRule rule = GameDefinitions.Tetris_SRS_Plus;
-    public KeyConfigs control = ControlDefinitions.cirq;
-    public PieceGenerator pieceGenerator;
+    private InputHandler _inputHandler;
 
+    public TetrisRule rule = GameDefinitions.Tetris_SRS_Plus;
+    public KeyConfigs control = KeyConfigDefinitions.cirq;
+    public ControllerConfigs handling = ControllerConfigDefinitions.cirq;  // ControllerConfigs.Default;
+    public PieceGenerator pieceGenerator;
+    public TetrisGameplay game;
 
 
     // public string SkinFileName = "jstris7.png";
@@ -34,7 +37,11 @@ public class Playfield : MonoBehaviour
         _tilemapField = GetComponentInChildren<TilemapField>();
         _tilemapField.SetSkin(skin);
 
+        _inputHandler = GetComponent<InputHandler>();
+
         pieceGenerator = new PieceGenerator(transform, skin, rule);
+
+        game = new TetrisGameplay();
     }
 
     private void Start()
@@ -76,7 +83,7 @@ public class Playfield : MonoBehaviour
         return spawner.Swap();
     }
 
-    public PieceEntity FreezePiece()
+    public PieceEntity FreezePiece(bool isAutoFrzoen)
     {
         // Set field
         List<Vector2Int> shape = new();
@@ -92,6 +99,8 @@ public class Playfield : MonoBehaviour
         Destroy(FieldPiece.gameObject);
         Destroy(GhostedPiece.gameObject);
         ClearLines();
+
+        if (isAutoFrzoen) _inputHandler.AutoFrozen(); 
 
         // Spawn new piece
         return spawner.NextPiece();
