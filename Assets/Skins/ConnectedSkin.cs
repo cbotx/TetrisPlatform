@@ -8,7 +8,9 @@ using Assets.Definitions;
 using Assets.Skins;
 public sealed class ConnectedSkin : SkinBase
 {
-    public Tile[,] s_connectedTiles = new Tile[8, 24];
+    public Tile[,] s_connectedTiles = new Tile[7, 24];
+    public Texture2D BaseGhostTexture { get; set; }
+    private Texture2D _ghostTexture;
 
     private Dictionary<TileBase, TileBase> TileCutTopEntityMapping = new();
     private Dictionary<TileBase, TileBase> TileCutBottomEntityMapping = new();
@@ -21,12 +23,25 @@ public sealed class ConnectedSkin : SkinBase
     {
         TileCutTopEntityMapping.Clear();
         TileCutBottomEntityMapping.Clear();
-        for (int i = 0; i < 8; ++i) {
+        for (int i = 0; i < 7; ++i) {
             for (int j = 0; j < SkinDefinitions.TileCutTopMapping.Length; ++j)
             {
                 TileCutTopEntityMapping.Add(s_connectedTiles[i, j], s_connectedTiles[i, SkinDefinitions.TileCutTopMapping[j]]);
                 TileCutBottomEntityMapping.Add(s_connectedTiles[i, j], s_connectedTiles[i, SkinDefinitions.TileCutBottomMapping[j]]);
             }
+        }
+        GenerateGhostTexture();
+    }
+    private void GenerateGhostTexture()
+    {
+        int baseWidth = s_connectedTiles[0, 0].sprite.texture.width;
+        int baseHeight = s_connectedTiles[0, 0].sprite.texture.height;
+        _ghostTexture = new Texture2D(baseWidth, baseHeight);
+        for (int i = 0; i < 7; ++i)
+        {
+            int dst_x = SkinDefinitions.ConnectedTexturePosition[i, 0] * TileWidth;
+            int dst_y = baseHeight - (SkinDefinitions.ConnectedTexturePosition[i, 1] + 6) * TileWidth;
+            Graphics.CopyTexture(BaseGhostTexture, 0, 0, 0, BaseGhostTexture.height - TileWidth * 6, TileWidth * 4, TileWidth * 6, _ghostTexture, 0, 0, dst_x, dst_y);
         }
     }
 
@@ -93,12 +108,9 @@ public sealed class ConnectedSkin : SkinBase
     {
         return TileCutBottomEntityMapping[tile];
     }
-    public override void SetMaskForTile(SpriteRenderer renderer, Texture2D texture, int pieceId)
+    public override void ApplyGhostShader(TilemapRenderer renderer)
     {
-        float offsetUnit = 1.0f * TileWidth / texture.width;
         renderer.material = MaterialDefinitions.material_AlphaMask;
-        renderer.material.SetTexture("_Alpha", texture);
-        renderer.material.SetTextureScale("_Alpha", new Vector2(2, 2));
-        renderer.material.SetTextureOffset("_Alpha", new Vector2(-offsetUnit * SkinDefinitions.ConnectedTexturePosition[pieceId, 0], offsetUnit * SkinDefinitions.ConnectedTexturePosition[pieceId, 1]));
+        renderer.material.SetTexture("_Alpha", _ghostTexture);
     }
 }

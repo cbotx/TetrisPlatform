@@ -15,14 +15,10 @@ public class PieceEntity : MonoBehaviour
     {
         get => _shape;
         set {
+            for (int i = 0; i < 4; ++i) m_Tilemap.SetTile(new Vector3Int(_shape[i].x, _shape[i].y), null);
             _shape = value;
-            Vector3[] localPositions = _shape.ToVector3Array();
-            int i = 0;
-            foreach (Transform child in transform)
-            {
-                child.localPosition = localPositions[i];
-                i++;
-            }
+            List<TileBase> tiles = _playfield.skin.GetPieceTiles(_shape, PieceId);
+            for (int i = 0; i < 4; ++i) m_Tilemap.SetTile(new Vector3Int(_shape[i].x, _shape[i].y), tiles[i]);
         }
     }
 
@@ -33,6 +29,7 @@ public class PieceEntity : MonoBehaviour
     public bool IsGhost = false;
 
     private Playfield _playfield;
+    public Tilemap m_Tilemap;
 
     private int _pieceId;
     public int PieceId { 
@@ -52,6 +49,7 @@ public class PieceEntity : MonoBehaviour
     private void Awake()
     {
         _playfield = GetComponentInParent<Playfield>();
+        m_Tilemap = GetComponent<Tilemap>();
     }
 
 
@@ -105,7 +103,6 @@ public class PieceEntity : MonoBehaviour
 
     public void PostMovement()
     {
-        //BottomTest();
         isGrounded = !IsValidWithOffset(0, -1);
         ResetFreezeTimer();
         
@@ -136,10 +133,6 @@ public class PieceEntity : MonoBehaviour
                 transform.localPosition += new Vector3(attempt.x, attempt.y, 0f);
                 direction = newDirection;
 
-                // For connected texture
-                UpdatePieceTexture(_playfield.skin);
-                _playfield.GhostedPiece.UpdatePieceTexture(_playfield.skin);
-
                 PostMovement();
 
                 return true;
@@ -149,29 +142,10 @@ public class PieceEntity : MonoBehaviour
 
     }
 
-    public void UpdatePieceTexture(SkinBase skin)
-    {
-        if (skin.SkinType != SkinType.Connected) return;
-        List<Vector2Int> shape = new();
-        foreach (Transform child in transform)
-        {
-            int x = Mathf.RoundToInt(child.transform.position.x);
-            int y = Mathf.RoundToInt(child.transform.position.y);
-            shape.Add(new Vector2Int(x, y));
-        }
-        List<Sprite> sprites = skin.GetPieceSprites(new PieceShape(shape), PieceId);
-        for (int i = 0; i < transform.childCount; ++i)
-        {
-            transform.GetChild(i).GetComponent<SpriteRenderer>().sprite = sprites[i];
-        }
-    }
-
-
     public void ResetShape()
     {
         direction = 0;
-        PieceId = _pieceId;
-        Shape = _shape;
+        Shape = _shapes[direction];
     }
 
 

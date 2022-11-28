@@ -17,41 +17,44 @@ public class PieceGenerator
         this.rule = rule;
     }
 
+    // Piece Structure:
+    //
+    //        ----PieceEntity (Script)
+    //       /
+    //  GameObject----Grid
+    //     \   \
+    //      \   ----Tilemap---Tile[,]
+    //       \
+    //        ----TilemapRenderer--(Optional)Material---Shader
+    //
     public PieceEntity NewPiece(int pieceId, bool isGhost)
     {
         PieceType pieceType = rule[pieceId];
+        PieceShape baseShape = pieceType.BaseShape;
 
-        GameObject pieceGameObject = new() {
+        GameObject pieceGameObject = new()
+        {
             name = (isGhost ? "Ghost" : "") + pieceType.Name
         };
+        pieceGameObject.AddComponent<Grid>();
+        Tilemap tilemap = pieceGameObject.AddComponent<Tilemap>();
+        TilemapRenderer tilemapRenderer = pieceGameObject.AddComponent<TilemapRenderer>();
+        tilemapRenderer.sortingOrder = isGhost ? 0 : 1;
 
-        Vector3[] blocks = pieceType.BaseShape.ToVector3Array();
-
-        List<Sprite> sprites = skin.GetPieceSprites(pieceType.BaseShape, pieceId);
-        List<Sprite> ghostSprites = null;
+        List<TileBase> tiles = skin.GetPieceTiles(baseShape, pieceId);
         if (isGhost)
-            ghostSprites = skin.GetPieceSprites(pieceType.BaseShape, 7);
+        {
+            skin.ApplyGhostShader(tilemapRenderer);
+        }
  
         for (int i = 0; i < 4; ++i)
         {
-            GameObject tileObject = new() {
-                name = i.ToString()
-            };
-
-            SpriteRenderer renderer = tileObject.AddComponent<SpriteRenderer>();
-            renderer.sprite = sprites[i];
-            renderer.sortingOrder = isGhost ? 0 : 1;
-
-            if (isGhost)
-            {
-                skin.SetMaskForTile(renderer, ghostSprites[i].texture, pieceId);
-            }
-
-            tileObject.transform.SetParent(pieceGameObject.transform);
-            tileObject.transform.position = blocks[i];
+            tilemap.SetTile(new Vector3Int(baseShape[i].x, baseShape[i].y), tiles[i]);
         }
+        
         pieceGameObject.transform.SetParent(field);
 
+        // Add Script last to ensure Awake() doesn't get null pointers
         PieceEntity pieceEntity = pieceGameObject.AddComponent<PieceEntity>();
         pieceEntity.PieceType = pieceType;
         pieceEntity.PieceId = pieceId;
@@ -59,4 +62,5 @@ public class PieceGenerator
         pieceEntity.enabled = false;
         return pieceEntity;
     }
+
 }

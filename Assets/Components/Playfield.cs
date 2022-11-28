@@ -94,15 +94,15 @@ public class Playfield : MonoBehaviour
     {
         canSwap = true;
         // Set field
-        List<Vector2Int> shape = new();
-        foreach (Transform child in FieldPiece.transform)
+        for (int i = 0; i < 4; ++i)
         {
-            int x = Mathf.RoundToInt(child.transform.position.x);
-            int y = Mathf.RoundToInt(child.transform.position.y);
+            var position = new Vector3Int(FieldPiece.Shape[i].x, FieldPiece.Shape[i].y);
+            int x = Mathf.RoundToInt(FieldPiece.transform.position.x) + FieldPiece.Shape[i].x;
+            int y = Mathf.RoundToInt(FieldPiece.transform.position.y) + FieldPiece.Shape[i].y;
+            _tilemapField.SetTile(new Vector3Int(x, y), FieldPiece.m_Tilemap.GetTile(position));
             s_Field[x, y] = true;
-            shape.Add(new Vector2Int(x, y));
         }
-        _tilemapField.AddPieceTiles(new PieceShape(shape), FieldPiece.PieceId);
+        
          
         Destroy(FieldPiece.gameObject);
         Destroy(GhostedPiece.gameObject);

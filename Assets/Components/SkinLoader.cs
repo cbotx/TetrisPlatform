@@ -17,9 +17,10 @@ public static class SkinLoader
         if (suffix == "png") {
             DefaultSkin skin = new();
             Texture2D texture = FileUtils.LoadTextureFromFile(s_skinPath + skinFileName);
+            skin.BaseGhostTexture = texture;
             int tileSise = SkinDefinitions.GetDefaultTextureTileSize(texture.width);
             skin.TileWidth = tileSise;
-            for (int i = 0; i < 8; ++i)
+            for (int i = 0; i < 7; ++i)
             {
                 skin.s_simpleSprites[i] = Sprite.Create(texture, new Rect(new Vector2(i * (tileSise + 1) + 1, 1), new Vector2(tileSise - 2, tileSise - 2)), new Vector2(0.5f, 0.5f), tileSise - 2);
                 skin.s_tiles[i] = ScriptableObject.CreateInstance<Tile>();
@@ -32,9 +33,10 @@ public static class SkinLoader
         {
             AnimatedSkin skin = new();
             List<Texture2D> textures = FileUtils.LoadTextureFromGIF(s_skinPath + skinFileName);
+            skin.BaseGhostTextures = textures;
             int tileSise = SkinDefinitions.GetDefaultTextureTileSize(textures.First().width);
             skin.TileWidth = tileSise;
-            for (int i = 0; i < 8; ++i)
+            for (int i = 0; i < 7; ++i)
             {
                 skin.s_tiles[i] = ScriptableObject.CreateInstance<AnimatedTile>();
                 Sprite[] sprites = new Sprite[textures.Count];
@@ -76,12 +78,7 @@ public static class SkinLoader
                 }
                 else if (skinType == "ghost")
                 {
-                    int tileSize = SkinDefinitions.GetConnectedGhostTextureTileSize(texture.width);
-                    for (int j = 0; j < 24; ++j)
-                    {
-                        skin.s_connectedTiles[7, j] = ScriptableObject.CreateInstance<Tile>();
-                        skin.s_connectedTiles[7, j].sprite = GetSpriteInConnectedTexture(texture, 7, j, tileSize);
-                    }
+                    skin.BaseGhostTexture = texture;
                 }
             }
             skin.PostLoading();

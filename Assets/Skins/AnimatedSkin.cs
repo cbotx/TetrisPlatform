@@ -7,9 +7,11 @@ using Assets.Definitions;
 using Assets.Skins;
 public sealed class AnimatedSkin : SkinBase
 {
-    public AnimatedTile[] s_tiles = new AnimatedTile[8];
-    public Tile[] s_static_tiles = new Tile[8];
+    public AnimatedTile[] s_tiles = new AnimatedTile[7];
+    public Tile[] s_static_tiles = new Tile[7];
     public int AnimationSpeed = SkinDefinitions.DefaultAnimationSpeed;
+    public List<Texture2D> BaseGhostTextures { get; set; }
+    private Texture2D _ghostTexture;
 
     public AnimatedSkin()
     {
@@ -17,8 +19,22 @@ public sealed class AnimatedSkin : SkinBase
     }
     public override void PostLoading()
     {
-
+        GenerateGhostTexture();
     }
+    private void GenerateGhostTexture()
+    {
+        // Stack frames on y
+        int frameCount = BaseGhostTextures.Count;
+        _ghostTexture = new Texture2D(BaseGhostTextures[0].width, BaseGhostTextures[0].height * frameCount);
+        for (int i = 0; i < frameCount; ++i)
+        {
+            for (int j = 0; j < 7; ++j)
+            {
+                Graphics.CopyTexture(BaseGhostTextures[i], 0, 0, (TileWidth + 1) * 7, 0, TileWidth, TileWidth, _ghostTexture, 0, 0, (TileWidth + 1) * j, TileWidth * i);
+            }
+        }
+    }
+
 
     public override List<TileBase> GetPieceTiles(PieceShape shape, int type)
     {
@@ -45,14 +61,14 @@ public sealed class AnimatedSkin : SkinBase
         return tile;
     }
     public override TileBase GetTileCutBottom(TileBase tile)
-    {
+    { 
         return tile;
     }
-    public override void SetMaskForTile(SpriteRenderer renderer, Texture2D texture, int pieceId)
+    public override void ApplyGhostShader(TilemapRenderer renderer)
     {
-        float offsetUnit = 1.0f * (TileWidth + 1) / texture.width;
         renderer.material = MaterialDefinitions.material_AlphaMask;
-        renderer.material.SetTexture("_Alpha", texture);
-        renderer.material.SetTextureOffset("_Alpha", new Vector2(offsetUnit * (7 - pieceId), 0));
+        renderer.material.SetTexture("_Alpha", _ghostTexture);
+        MaterialAnimator animator = renderer.gameObject.AddComponent<MaterialAnimator>();
+        animator.Initialize(renderer.material, "_Alpha", BaseGhostTextures.Count, SkinDefinitions.DefaultAnimationSpeed);
     }
 }

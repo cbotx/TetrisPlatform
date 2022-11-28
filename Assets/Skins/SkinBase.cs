@@ -22,6 +22,6 @@ namespace Assets.Skins
         public abstract TileBase GetTileCutTop(TileBase tile);
         public abstract TileBase GetTileCutBottom(TileBase tile);
 
-        public abstract void SetMaskForTile(SpriteRenderer renderer, Texture2D texture, int pieceId);
+        public abstract void ApplyGhostShader(TilemapRenderer renderer);
     }
 }

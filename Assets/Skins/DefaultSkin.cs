@@ -7,16 +7,26 @@ using Assets.Definitions;
 using Assets.Skins;
 public sealed class DefaultSkin : SkinBase
 {
-    public Sprite[] s_simpleSprites = new Sprite[8];
-    public Tile[] s_tiles = new Tile[8];
-    
+    public Sprite[] s_simpleSprites = new Sprite[7];
+    public Tile[] s_tiles = new Tile[7];
+    public Texture2D BaseGhostTexture { get; set; }
+    private Texture2D _ghostTexture;
+
     public DefaultSkin()
     {
         SkinType = SkinType.Default;
     }
     public override void PostLoading()
     {
+        GenerateGhostTexture();
+    }
 
+    private void GenerateGhostTexture()
+    {
+        _ghostTexture = new Texture2D(BaseGhostTexture.width, BaseGhostTexture.height);
+        for (int i = 0; i < 7; ++i) {
+            Graphics.CopyTexture(BaseGhostTexture, 0, 0, (TileWidth + 1) * 7, 0, TileWidth, TileWidth, _ghostTexture, 0, 0, (TileWidth + 1) * i, 0);
+        }
     }
 
     public override List<TileBase> GetPieceTiles(PieceShape shape, int type)
@@ -46,11 +56,10 @@ public sealed class DefaultSkin : SkinBase
     {
         return tile;
     }
-    public override void SetMaskForTile(SpriteRenderer renderer, Texture2D texture, int pieceId)
+
+    public override void ApplyGhostShader(TilemapRenderer renderer)
     {
-        float offsetUnit = 1.0f * (TileWidth + 1) / texture.width;
         renderer.material = MaterialDefinitions.material_AlphaMask;
-        renderer.material.SetTexture("_Alpha", texture);
-        renderer.material.SetTextureOffset("_Alpha", new Vector2(offsetUnit * (7 - pieceId), 0));
+        renderer.material.SetTexture("_Alpha", _ghostTexture);
     }
 }

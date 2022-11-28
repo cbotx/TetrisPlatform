@@ -62,7 +62,6 @@ public class PieceQueue : MonoBehaviour
     public PieceEntity Swap(PieceEntity pieceEntity)
     {
         pieceEntity.ResetShape();
-        pieceEntity.UpdatePieceTexture(_playfield.skin);
 
         pieceEntity.transform.SetParent(_swapGO.transform, false);
         pieceEntity.transform.localPosition = -pieceEntity.PieceType.barycenter;
