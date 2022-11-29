@@ -43,6 +43,7 @@ public sealed class ConnectedSkin : SkinBase
             int dst_y = baseHeight - (SkinDefinitions.ConnectedTexturePosition[i, 1] + 6) * TileWidth;
             Graphics.CopyTexture(BaseGhostTexture, 0, 0, 0, BaseGhostTexture.height - TileWidth * 6, TileWidth * 4, TileWidth * 6, _ghostTexture, 0, 0, dst_x, dst_y);
         }
+        _ghostTexture.Apply();
     }
 
     public override List<TileBase> GetPieceTiles(PieceShape shape, int type)

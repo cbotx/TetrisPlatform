@@ -487,6 +487,7 @@ GameObject:
   - component: {fileID: 275985658}
   - component: {fileID: 275985660}
   - component: {fileID: 275985659}
+  - component: {fileID: 275985662}
   - component: {fileID: 275985661}
   m_Layer: 0
   m_Name: FrozenTiles
@@ -609,6 +610,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 401d24a1cf131a949aaa70f6a65c8ef9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!156049354 &275985662
+Grid:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 275985657}
+  m_Enabled: 1
+  m_CellSize: {x: 1, y: 1, z: 1}
+  m_CellGap: {x: 0, y: 0, z: 0}
+  m_CellLayout: 0
+  m_CellSwizzle: 0
 --- !u!1 &465065575
 GameObject:
   m_ObjectHideFlags: 0

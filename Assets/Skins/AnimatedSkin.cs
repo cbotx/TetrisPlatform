@@ -33,6 +33,7 @@ public sealed class AnimatedSkin : SkinBase
                 Graphics.CopyTexture(BaseGhostTextures[i], 0, 0, (TileWidth + 1) * 7, 0, TileWidth, TileWidth, _ghostTexture, 0, 0, (TileWidth + 1) * j, TileWidth * i);
             }
         }
+        _ghostTexture.Apply();
     }
 
 

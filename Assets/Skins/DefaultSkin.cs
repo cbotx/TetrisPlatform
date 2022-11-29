@@ -27,6 +27,7 @@ public sealed class DefaultSkin : SkinBase
         for (int i = 0; i < 7; ++i) {
             Graphics.CopyTexture(BaseGhostTexture, 0, 0, (TileWidth + 1) * 7, 0, TileWidth, TileWidth, _ghostTexture, 0, 0, (TileWidth + 1) * i, 0);
         }
+        _ghostTexture.Apply();
     }
 
     public override List<TileBase> GetPieceTiles(PieceShape shape, int type)
