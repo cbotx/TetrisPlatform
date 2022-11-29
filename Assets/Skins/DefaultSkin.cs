@@ -11,16 +11,18 @@ public sealed class DefaultSkin : ISkin
     public int TileWidth { get; set; }
 
     public Tile[] s_tiles = new Tile[12];
-
+    public Color32[] AvgColor { get; set; }
     public DefaultSkin(string filePath)
     {
         SkinType = SkinType.Default;
+        AvgColor = new Color32[8];
         Texture2D texture = FileUtils.LoadTextureFromFile(filePath);
         int tileSize = texture.height;
         int gapSize = SkinDefinitions.GetDefaultTextureGapSize(texture.width, texture.height);
         TileWidth = tileSize;
         for (int i = 0; i < 12; ++i)
         {
+            if (i < 7) AvgColor[i] = GraphicsUtils.AverageColorFromTexture(texture, new RectInt(i * (tileSize + gapSize), 0, tileSize, tileSize));
             s_tiles[i] = ScriptableObject.CreateInstance<Tile>();
             s_tiles[i].sprite = Sprite.Create(texture, new Rect(new Vector2(i * (tileSize + gapSize) + gapSize, gapSize), new Vector2(tileSize - gapSize * 2, tileSize - gapSize * 2)), new Vector2(0.5f, 0.5f), tileSize - gapSize * 2);
         }

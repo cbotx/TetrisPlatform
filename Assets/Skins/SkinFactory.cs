@@ -14,8 +14,10 @@ namespace Assets.Skins
         public SkinType SkinType { get; set; }
 
         public int TileWidth { get; set; }
-        List<TileBase> GetPieceTiles(PieceShape shape, BlockType type);
-        
+
+        public Color32[] AvgColor { get; set;}
+        public List<TileBase> GetPieceTiles(PieceShape shape, BlockType type);
+
 
     }
 

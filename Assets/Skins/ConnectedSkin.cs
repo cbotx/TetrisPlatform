@@ -12,6 +12,7 @@ public sealed class ConnectedSkin : ISkin, ISkinConnected
     public int TileWidth { get; set; }
 
     public Tile[,] s_connectedTiles = new Tile[12, 24];
+    public Color32[] AvgColor { get; set; }
 
     private Dictionary<TileBase, TileBase> TileCutTopEntityMapping = new();
     private Dictionary<TileBase, TileBase> TileCutBottomEntityMapping = new();
@@ -19,7 +20,7 @@ public sealed class ConnectedSkin : ISkin, ISkinConnected
     public ConnectedSkin(string filePath)
     {
         SkinType = SkinType.Connected;
-        Debug.Log(filePath);
+        AvgColor = new Color32[8];
         Dictionary<string, Texture2D> textures = FileUtils.LoadTexturesFromZip(filePath);
         int maxWidth = 0;
         foreach(var item in textures)
@@ -39,6 +40,12 @@ public sealed class ConnectedSkin : ISkin, ISkinConnected
                 BlockType type = (BlockType)i;
                 if (isMino && (type == BlockType.Ghost || type == BlockType.Cross)) continue;
                 if (!isMino && (type != BlockType.Ghost && type != BlockType.Cross)) continue;
+
+                int x = SkinDefinitions.ConnectedTexturePosition[i, 0] * tileSize;
+                int y = texture.height - (SkinDefinitions.ConnectedTexturePosition[i, 1] + 6) * tileSize;
+                if (i < 7) AvgColor[i] = GraphicsUtils.AverageColorFromTexture(texture, new RectInt(x, y, tileSize * 4, tileSize * 6));
+
+
                 int tileCount = (type == BlockType.Garbage || type == BlockType.Wall) ? 16 : 24;
                 for (int j = 0; j < tileCount; ++j)
                 {
@@ -49,7 +56,8 @@ public sealed class ConnectedSkin : ISkin, ISkinConnected
         }
         GenerateTileEntityMapping();
     }
-    private static Sprite GetSpriteInConnectedTexture(Texture2D texture, int type, int tileIdx, int unitSize)
+
+    private Sprite GetSpriteInConnectedTexture(Texture2D texture, int type, int tileIdx, int unitSize)
     {
         int x = (SkinDefinitions.ConnectedTexturePosition[type, 0] + tileIdx % 4) * unitSize;
         int y = texture.height - (SkinDefinitions.ConnectedTexturePosition[type, 1] + tileIdx / 4) * unitSize - unitSize;

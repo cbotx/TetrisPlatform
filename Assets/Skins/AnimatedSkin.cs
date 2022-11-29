@@ -14,16 +14,18 @@ public sealed class AnimatedSkin : ISkin
 
     public AnimatedTile[] s_tiles = new AnimatedTile[12];
     public int AnimationSpeed = SkinDefinitions.DefaultAnimationSpeed;
-
+    public Color32[] AvgColor { get; set; }
     public AnimatedSkin(string filePath)
     {
         SkinType = SkinType.Animated;
+        AvgColor = new Color32[8];
         (List<Texture2D> textures, int fps) = FileUtils.LoadTextureFromGIF(filePath);
         int tileSize = textures.First().height;
         int gapSize = SkinDefinitions.GetDefaultTextureGapSize(textures.First().width, textures.First().height);
         TileWidth = tileSize;
         for (int i = 0; i < 12; ++i)
         {
+            if (i < 7) AvgColor[i] = GraphicsUtils.AverageColorFromTexture(textures.First(), new RectInt(i * (tileSize + gapSize), 0, tileSize, tileSize));
             s_tiles[i] = ScriptableObject.CreateInstance<AnimatedTile>();
             Sprite[] sprites = new Sprite[textures.Count];
             for (int j = 0; j < textures.Count; ++j)

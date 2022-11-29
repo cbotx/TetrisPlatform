@@ -38,6 +38,7 @@ public class PieceGenerator
         };
         pieceGameObject.AddComponent<Grid>();
         Tilemap tilemap = pieceGameObject.AddComponent<Tilemap>();
+        if (isGhost) tilemap.color = skin.AvgColor[pieceId];
         TilemapRenderer tilemapRenderer = pieceGameObject.AddComponent<TilemapRenderer>();
         tilemapRenderer.sortingOrder = isGhost ? 0 : 1;
 
