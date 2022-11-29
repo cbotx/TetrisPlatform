@@ -7,10 +7,10 @@ using Assets.Definitions;
 public class PieceGenerator
 {
     public Transform field;
-    public SkinBase skin;
+    public ISkin skin;
     public TetrisRule rule;
 
-    public PieceGenerator(Transform field, SkinBase skin, TetrisRule rule)
+    public PieceGenerator(Transform field, ISkin skin, TetrisRule rule)
     {
         this.field = field;
         this.skin = skin;
@@ -41,11 +41,7 @@ public class PieceGenerator
         TilemapRenderer tilemapRenderer = pieceGameObject.AddComponent<TilemapRenderer>();
         tilemapRenderer.sortingOrder = isGhost ? 0 : 1;
 
-        List<TileBase> tiles = skin.GetPieceTiles(baseShape, pieceId);
-        if (isGhost)
-        {
-            skin.ApplyGhostShader(tilemapRenderer);
-        }
+        List<TileBase> tiles = isGhost ? skin.GetPieceTiles(baseShape, BlockType.Ghost) : skin.GetPieceTiles(baseShape, (BlockType)pieceId);
  
         for (int i = 0; i < 4; ++i)
         {

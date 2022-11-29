@@ -17,7 +17,7 @@ public class PieceEntity : MonoBehaviour
         set {
             for (int i = 0; i < 4; ++i) m_Tilemap.SetTile(new Vector3Int(_shape[i].x, _shape[i].y), null);
             _shape = value;
-            List<TileBase> tiles = _playfield.skin.GetPieceTiles(_shape, PieceId);
+            List<TileBase> tiles = _playfield.skin.GetPieceTiles(_shape, IsGhost ? BlockType.Ghost : (BlockType)PieceId);
             for (int i = 0; i < 4; ++i) m_Tilemap.SetTile(new Vector3Int(_shape[i].x, _shape[i].y), tiles[i]);
         }
     }

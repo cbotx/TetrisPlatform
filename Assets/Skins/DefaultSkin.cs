@@ -5,62 +5,43 @@ using UnityEngine.Tilemaps;
 using Assets.Utils;
 using Assets.Definitions;
 using Assets.Skins;
-public sealed class DefaultSkin : SkinBase
+public sealed class DefaultSkin : ISkin
 {
-    public Sprite[] s_simpleSprites = new Sprite[7];
-    public Tile[] s_tiles = new Tile[7];
-    public Texture2D BaseGhostTexture { get; set; }
-    private Texture2D _ghostTexture;
+    public SkinType SkinType { get; set; }
+    public int TileWidth { get; set; }
 
-    public DefaultSkin()
+    public Tile[] s_tiles = new Tile[12];
+
+    public DefaultSkin(string filePath)
     {
         SkinType = SkinType.Default;
-    }
-    public override void PostLoading()
-    {
-        GenerateGhostTexture();
-    }
-
-    private void GenerateGhostTexture()
-    {
-        _ghostTexture = new Texture2D(BaseGhostTexture.width, BaseGhostTexture.height);
-        for (int i = 0; i < 7; ++i) {
-            Graphics.CopyTexture(BaseGhostTexture, 0, 0, (TileWidth + 1) * 7, 0, TileWidth, TileWidth, _ghostTexture, 0, 0, (TileWidth + 1) * i, 0);
+        Texture2D texture = FileUtils.LoadTextureFromFile(filePath);
+        int tileSize = texture.height;
+        int gapSize = SkinDefinitions.GetDefaultTextureGapSize(texture.width, texture.height);
+        TileWidth = tileSize;
+        for (int i = 0; i < 12; ++i)
+        {
+            s_tiles[i] = ScriptableObject.CreateInstance<Tile>();
+            s_tiles[i].sprite = Sprite.Create(texture, new Rect(new Vector2(i * (tileSize + gapSize) + gapSize, gapSize), new Vector2(tileSize - gapSize * 2, tileSize - gapSize * 2)), new Vector2(0.5f, 0.5f), tileSize - gapSize * 2);
         }
-        _ghostTexture.Apply();
     }
 
-    public override List<TileBase> GetPieceTiles(PieceShape shape, int type)
+    public List<TileBase> GetPieceTiles(PieceShape shape, BlockType type)
     {
         List<TileBase> tiles = new();
         for (int i = 0; i < shape.blocks.Length; ++i)
         {
-            tiles.Add(s_tiles[type]);
+            tiles.Add(s_tiles[(int)type]);
         }
         return tiles;
     }
 
-    public override List<Sprite> GetPieceSprites(PieceShape shape, int type)
-    {
-        List<Sprite> sprites = new();
-        for (int i = 0; i < shape.blocks.Length; ++i)
-        {
-            sprites.Add(s_tiles[type].sprite);
-        }
-        return sprites;
-    }
-    public override TileBase GetTileCutTop(TileBase tile)
+    public TileBase GetTileCutTop(TileBase tile)
     {
         return tile;
     }
-    public override TileBase GetTileCutBottom(TileBase tile)
+    public TileBase GetTileCutBottom(TileBase tile)
     {
         return tile;
-    }
-
-    public override void ApplyGhostShader(TilemapRenderer renderer)
-    {
-        renderer.material = MaterialDefinitions.material_AlphaMask;
-        renderer.material.SetTexture("_Alpha", _ghostTexture);
     }
 }

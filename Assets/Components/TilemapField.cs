@@ -10,7 +10,7 @@ public class TilemapField : MonoBehaviour
     private int _width;
     private int _height;
     private Tilemap _tilemap = null;
-    private SkinBase _skin = null;
+    private ISkin _skin = null;
     private void Awake()
     {
         _width = Playfield.s_Width;
@@ -18,18 +18,9 @@ public class TilemapField : MonoBehaviour
         _tilemap = GetComponent<Tilemap>();
     }
 
-    public void SetSkin(SkinBase skin)
+    public void SetSkin(ISkin skin)
     {
         _skin = skin;
-    }
-
-    public void AddPieceTiles(PieceShape shape, int pieceId)
-    {
-        List<TileBase> tiles = _skin.GetPieceTiles(shape, pieceId);
-        for (int i = 0; i < shape.blocks.Length; ++i)
-        {
-            _tilemap.SetTile(new Vector3Int(shape.blocks[i].x, shape.blocks[i].y), tiles[i]);
-        }
     }
 
     public void DeleteLine(int lineIdx)
@@ -37,19 +28,20 @@ public class TilemapField : MonoBehaviour
         for (int j = 0; j < _width; ++j)
         {
             _tilemap.SetTile(new Vector3Int(j, lineIdx), null);
-            if (_skin.SkinType == SkinType.Connected)
+            ISkinConnected connectedSkin = _skin as ISkinConnected;
+            if (connectedSkin != null)
             {
                 if (lineIdx > 0)
                 {
                     Vector3Int position = new(j, lineIdx - 1);
                     TileBase tile = _tilemap.GetTile(position);
-                    if (tile) _tilemap.SetTile(position, _skin.GetTileCutTop(tile));
+                    if (tile) _tilemap.SetTile(position, connectedSkin.GetTileCutTop(tile));
                 }
                 if (lineIdx < _height - 1)
                 {
                     Vector3Int position = new(j, lineIdx + 1);
                     TileBase tile = _tilemap.GetTile(position);
-                    if (tile) _tilemap.SetTile(position, _skin.GetTileCutBottom(tile));
+                    if (tile) _tilemap.SetTile(position, connectedSkin.GetTileCutBottom(tile));
                 }
             }
         }

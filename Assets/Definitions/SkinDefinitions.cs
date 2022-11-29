@@ -12,12 +12,17 @@ namespace Assets.Definitions
     public static class SkinDefinitions
     {
         // Tile starting position in texture image for each piece
-        public static int[,] ConnectedTexturePosition = { { 0, 0 }, { 4, 0 }, { 8, 0 }, { 12, 0 }, { 0, 6 }, { 4, 6 }, { 8, 6 }, { 0, 0 } };
+        public static int[,] ConnectedTexturePosition = {
+            { 0, 0 }, { 4, 0 }, { 8, 0 }, { 12, 0 }, { 0, 6 }, { 4, 6 }, { 8, 6 }, // Mino
+            { 0, 0 }, //Ghost
+            { 12, 6 }, { 16, 0 }, { 16, 4 }, // Dead, Garbage, Wall
+            { 4, 0 } }; // Cross
         public static int DefaultAnimationSpeed = 30;
+        public static float AnimationSpeedMultiplier = 1.5f;
 
-        public static int GetDefaultTextureTileSize(int textureWidth)
+        public static int GetDefaultTextureGapSize(int textureWidth, int textureHeight)
         {
-            return (textureWidth - 12) / 12;
+            return (textureWidth - textureHeight * 12) / 11;
         }
         public static int GetConnectedMinoTextureTileSize(int textureWidth)
         {

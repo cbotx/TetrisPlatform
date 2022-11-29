@@ -14,7 +14,7 @@ public class Playfield : MonoBehaviour
 
     public Spawner spawner = null;
 
-    public SkinBase skin { get; set; }
+    public ISkin skin { get; set; }
 
     private TilemapField _tilemapField = null;
 
@@ -34,7 +34,7 @@ public class Playfield : MonoBehaviour
     private void Awake()
     {
         spawner = GetComponentInChildren<Spawner>();
-        skin = SkinLoader.LoadSkin(SkinFileName);
+        skin = SkinFactory.LoadSkin(SkinFileName);
         _tilemapField = GetComponentInChildren<TilemapField>();
         _tilemapField.SetSkin(skin);
 

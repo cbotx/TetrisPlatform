@@ -26,10 +26,11 @@ namespace Assets.Utils
             return null;
         }
 
-        public static List<Texture2D> LoadTextureFromGIF(string filePath)
+        public static (List<Texture2D>, int) LoadTextureFromGIF(string filePath)
         {
             if (File.Exists(filePath))
             {
+                int totalDelay = 0;
                 List<Texture2D> textures = new();
                 byte[] data = File.ReadAllBytes(filePath);
 
@@ -40,15 +41,14 @@ namespace Assets.Utils
                     while (img != null)
                     {
                         textures.Add(img.CreateTexture());
-                        int delay = img.Delay;
-
+                        totalDelay += img.Delay;
                         img = decoder.NextImage();
                     }
                 }
-                return textures;
+                return (textures, Convert.ToInt32(1000.0f * textures.Count / totalDelay));
             }
 
-            return null;
+            return (null, 0);
         }
 
         public static Dictionary<string, Texture2D> LoadTexturesFromZip(string filePath)
