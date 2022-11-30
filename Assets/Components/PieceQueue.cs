@@ -42,7 +42,7 @@ public class PieceQueue : MonoBehaviour
     {
         foreach (PieceEntity obj in _queue)
         {
-            obj.transform.localPosition += new Vector3(0, 3.75f, 0);
+            obj.transform.localPosition += new Vector3(0, 3f, 0);
         }
 
         pieceEntity.transform.SetParent(_nextQueueGO.transform, false);

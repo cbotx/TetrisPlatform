@@ -40,7 +40,7 @@ public class PieceGenerator
         Tilemap tilemap = pieceGameObject.AddComponent<Tilemap>();
         if (isGhost) tilemap.color = skin.AvgColor[pieceId];
         TilemapRenderer tilemapRenderer = pieceGameObject.AddComponent<TilemapRenderer>();
-        tilemapRenderer.sortingOrder = isGhost ? 0 : 1;
+        tilemapRenderer.sortingOrder = isGhost ? 10 : 11;
 
         List<TileBase> tiles = isGhost ? skin.GetPieceTiles(baseShape, BlockType.Ghost) : skin.GetPieceTiles(baseShape, (BlockType)pieceId);
  
