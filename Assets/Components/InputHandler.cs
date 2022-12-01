@@ -82,6 +82,17 @@ public class InputHandler: MonoBehaviour
             controller.Rotated();
             _piece.Rotate(2);
         }
+        if (input.GetKey(Op.MoveLeftFast)) {
+            controller.MoveFast();
+            while (_piece.Move(-1, 0)) ;
+        }
+        if (input.GetKey(Op.MoveRightFast)) {
+            controller.MoveFast();
+            while (_piece.Move(1, 0)) ;
+        }
+        if (input.GetKey(Op.SoftDropFast)) {
+            while (_piece.Move(0, -1)) ;
+        }
 
         bool leftMove = input.GetKey(Op.MoveLeft);
         bool rightMove = input.GetKey(Op.MoveRight);

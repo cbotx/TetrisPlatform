@@ -13,12 +13,13 @@ public static class KeyConfigDefinitions
         {
             MoveLeft = KeyCode.LeftArrow,
             MoveRight = KeyCode.RightArrow,
-            SoftDrop = KeyCode.UpArrow,
+            SoftDrop = KeyCode.DownArrow,
             HardDrop = KeyCode.Space,
             Hold = KeyCode.LeftShift,
             RotateRight = KeyCode.D,
             RotateLeft = KeyCode.A,
             Rotate180 = KeyCode.W,
+            SoftDropFast = KeyCode.UpArrow,
             Exit = KeyCode.Escape,
             Retry = KeyCode.BackQuote,
         }

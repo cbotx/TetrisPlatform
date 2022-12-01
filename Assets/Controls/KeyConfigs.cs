@@ -5,7 +5,6 @@ using System.Reflection;
 using UnityEngine;
 
 
-[Serializable]
 public class KeyBindings
 {
     public KeyCode MoveLeft;
@@ -20,6 +19,10 @@ public class KeyBindings
     public KeyCode RotateLeft;
     public KeyCode Rotate180;
 
+    public KeyCode MoveLeftFast;
+    public KeyCode MoveRightFast;
+    public KeyCode SoftDropFast;
+
     public KeyCode Exit;
     public KeyCode Retry;
 
@@ -32,6 +35,7 @@ public enum Op
     SoftDrop, HardDrop, 
     Hold,
     RotateLeft, RotateRight, Rotate180,
+    MoveLeftFast, MoveRightFast, SoftDropFast,
     Exit, Retry,
 }
 

@@ -47,6 +47,11 @@ public class MovementController
         dropped.Start();
     }
 
+    public void MoveFast()
+    {
+        rotated.Stop();
+    }
+
     public void MoveLeft()
     {
         rotated.Stop();
