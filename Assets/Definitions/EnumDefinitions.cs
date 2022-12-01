@@ -16,13 +16,13 @@ namespace Assets.Definitions
 
     public enum BlockType
     {
-        Z = 0,
-        L = 1,
-        O = 2,
-        S = 3,
-        I = 4,
-        J = 5,
-        T = 6,
+        Red = 0,
+        Orange = 1,
+        Yellow = 2,
+        Green = 3,
+        Cyan = 4,
+        Blue = 5,
+        Purple = 6,
         Ghost = 7,
         Dead = 8,
         Garbage = 9,
