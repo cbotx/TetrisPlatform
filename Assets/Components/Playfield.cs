@@ -2,12 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Assets.Skins;
+using Assets.AI;
+using Assets.AI.Structures;
+
 
 public class Playfield : MonoBehaviour
 {
     public const int s_Width = 10;
     public const int s_Height = 50;
     private bool[,] s_Field = new bool[s_Width, s_Height];
+    public BoardState BoardState;
 
     public PieceEntity GhostedPiece { get; set; }
     public PieceEntity FieldPiece { get; set; }
@@ -19,6 +23,7 @@ public class Playfield : MonoBehaviour
     private TilemapField _tilemapField = null;
 
     private InputHandler _inputHandler;
+    private AIHandler _aiHandler;
 
     public TetrisRule rule = GameDefinitions.Tetris_SRS_Plus;
     public KeyConfigs control = KeyConfigDefinitions.cirq;
@@ -34,19 +39,25 @@ public class Playfield : MonoBehaviour
     private void Awake()
     {
         spawner = GetComponentInChildren<Spawner>();
+
         skin = SkinFactory.LoadSkin(SkinFileName);
         _tilemapField = GetComponentInChildren<TilemapField>();
         _tilemapField.SetSkin(skin);
 
-        _inputHandler = GetComponent<InputHandler>();
+        // _inputHandler = GetComponent<InputHandler>();
+        _aiHandler = gameObject.AddComponent<AIHandler>();
 
         pieceGenerator = new PieceGenerator(transform, skin, rule);
+        BoardState = new BoardState(s_Field, 0);
 
         game = new TetrisGameplay();
     }
 
     private void Start()
     {
+        spawner.Restart();
+        _aiHandler.SetAI(new PCAI());
+        _aiHandler.UpdateBoard(UpdateEvent.NextPieceEvent, BoardState);
     }
     public bool HasEntityAt(int x, int y)
     {
@@ -108,10 +119,14 @@ public class Playfield : MonoBehaviour
         Destroy(GhostedPiece.gameObject);
         ClearLines();
 
-        if (isAutoFrzoen) _inputHandler.AutoFrozen(); 
+        if (_inputHandler != null && isAutoFrzoen) _inputHandler.AutoFrozen();
 
         // Spawn new piece
-        return spawner.NextPiece();
+        PieceEntity nextPiece = spawner.NextPiece();
+        BoardState.BagIdxIncrease();
+        if (_aiHandler != null) _aiHandler.UpdateBoard(UpdateEvent.NextPieceEvent, BoardState);
+
+        return nextPiece;
     }
     private void ClearLines()
     {

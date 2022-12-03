@@ -19,18 +19,17 @@ public class Spawner : MonoBehaviour
     {
         _playfield = GetComponentInParent<Playfield>();
         _pieceQueue = _playfield.GetComponentInChildren<PieceQueue>();
-        _gen = _playfield.pieceGenerator;
     }
 
     // Start is called before the first frame update
     private void Start()
     {
-        _gen = _playfield.pieceGenerator;
-        InitializePieces();
+
     }
 
     private void InitializePieces()
     {
+        _gen = _playfield.pieceGenerator;
         _bagIdx = 0;
         GenerateBag();
         _pieceQueue.SetSwap(GetNextPieceEntity());

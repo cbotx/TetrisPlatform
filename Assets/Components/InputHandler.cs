@@ -5,13 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
+using Assets.AI;
 
 public class InputHandler: MonoBehaviour
 {
 
     public InputOperation input;
-
-
 
     private Playfield _playfield;
     private PieceEntity _piece;
@@ -20,9 +19,13 @@ public class InputHandler: MonoBehaviour
 
     private SimpleTimer autoFrozen;
 
-    public void Start()
+    private void Awake()
     {
         _playfield = GetComponentInParent<Playfield>();
+    }
+
+    public void Start()
+    {
         input = _playfield.control.Input;
         controller = new MovementController(_playfield.handling, _playfield.game, (x,y) => _piece.Move(x,y));
         autoFrozen = new SimpleTimer(controller.config.ACH);

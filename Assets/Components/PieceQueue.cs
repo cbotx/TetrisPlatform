@@ -5,8 +5,8 @@ using UnityEngine;
 public class PieceQueue : MonoBehaviour
 {
     public const int QueueSize = 5;
-    private List<PieceEntity> _queue = new();
-    private PieceEntity _swapPiece = null;
+    public List<PieceEntity> Queue = new();
+    public PieceEntity SwapPiece = null;
 
     [SerializeField]
     private GameObject _swapGO;
@@ -22,8 +22,8 @@ public class PieceQueue : MonoBehaviour
     public PieceEntity PushAndGetPiece(PieceEntity pieceEntity)
     {
         PushPiece(pieceEntity);
-        PieceEntity firstPieceEntity = _queue[0];
-        _queue.RemoveAt(0);
+        PieceEntity firstPieceEntity = Queue[0];
+        Queue.RemoveAt(0);
         firstPieceEntity.transform.SetParent(_playfield.transform, false);
         firstPieceEntity.enabled = true;
         return firstPieceEntity;
@@ -34,13 +34,13 @@ public class PieceQueue : MonoBehaviour
     {
         _swapGO.transform.DestroyAllChildren();
         _nextQueueGO.transform.DestroyAllChildren();
-        _queue.Clear();
-        _swapPiece = null;
+        Queue.Clear();
+        SwapPiece = null;
     }
 
     public void PushPiece(PieceEntity pieceEntity)
     {
-        foreach (PieceEntity obj in _queue)
+        foreach (PieceEntity obj in Queue)
         {
             obj.transform.localPosition += new Vector3(0, 3f, 0);
         }
@@ -48,7 +48,8 @@ public class PieceQueue : MonoBehaviour
         pieceEntity.transform.SetParent(_nextQueueGO.transform, false);
         pieceEntity.transform.localPosition = -pieceEntity.PieceType.barycenter ;
         pieceEntity.enabled = false;
-        _queue.Add(pieceEntity);
+        _playfield.BoardState.PushPiece(pieceEntity.PieceId);
+        Queue.Add(pieceEntity);
     }
 
     public void SetSwap(PieceEntity pieceEntity)
@@ -56,7 +57,8 @@ public class PieceQueue : MonoBehaviour
         pieceEntity.transform.SetParent(_swapGO.transform, false);
         pieceEntity.transform.localPosition = -pieceEntity.PieceType.barycenter;
         pieceEntity.enabled = false;
-        _swapPiece = pieceEntity;
+        SwapPiece = pieceEntity;
+        _playfield.BoardState.SetPiece(0, pieceEntity.PieceId);
     }
 
     public PieceEntity Swap(PieceEntity pieceEntity)
@@ -68,10 +70,11 @@ public class PieceQueue : MonoBehaviour
         pieceEntity.transform.rotation = Quaternion.identity;
         pieceEntity.enabled = false;
 
-        PieceEntity oldPiece = _swapPiece;
+        PieceEntity oldPiece = SwapPiece;
         oldPiece.enabled = true;
         oldPiece.transform.SetParent(_playfield.transform, false);
-        _swapPiece = pieceEntity;
+        SwapPiece = pieceEntity;
+        _playfield.BoardState.Swap();
         return oldPiece;
     }
 
