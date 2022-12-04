@@ -34,6 +34,8 @@ namespace Assets.AI.Structures
         public void SetPiece(int position, int pieceId)
         {
             pieces[position] = pieceId;
+            bagUsed |= 1 << pieceId;
+            if (bagUsed == 0b1111111) bagUsed = 0;
         }
 
         public void PushPiece(int newPiece)
